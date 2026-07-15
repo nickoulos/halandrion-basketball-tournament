@@ -139,18 +139,18 @@
 
   <!-- ===================== WIZARD ===================== -->
   <sc-if value="{{ wizardOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;inset:0;z-index:60;background:rgba(30,22,16,.55);backdrop-filter:blur(4px);display:flex;justify-content:center" onClick="{{ h.backdropClose }}">
-      <div onClick="{{ h.stop }}" style="width:100%;max-width:880px;background:#ecdcc0;display:flex;flex-direction:column;box-shadow:0 0 80px rgba(0,0,0,.5);animation:rise .3s ease both;height:100vh">
+    <div style="position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:flex;justify-content:center" onClick="{{ h.backdropClose }}">
+      <div onClick="{{ h.stop }}" style="width:100%;max-width:880px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 80px rgba(0,0,0,.5);animation:rise .3s ease both;height:100vh">
 
-        <div style="flex:none;padding:16px 26px 12px;border-bottom:2px solid rgba(44,33,26,.12);background:rgba(236,220,192,.92)">
+        <div style="flex:none;padding:16px 26px 12px;border-bottom:2px solid rgba(237,230,218,.12);background:rgba(18,16,14,.94)">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:14px">
             <div style="font:700 14px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase">{{ stepLabel }}</div>
-            <button onClick="{{ h.closeWizard }}" style="width:34px;height:34px;border-radius:50%;border:2px solid rgba(44,33,26,.25);background:transparent;font-size:16px;color:#2c211a;cursor:pointer" style-hover="background:rgba(44,33,26,.08)">✕</button>
+            <button onClick="{{ h.closeWizard }}" style="width:34px;height:34px;border-radius:50%;border:2px solid rgba(237,230,218,.25);background:transparent;font-size:16px;color:var(--text);cursor:pointer" style-hover="background:rgba(237,230,218,.08)">✕</button>
           </div>
-          <div style="margin-top:11px;height:8px;border-radius:999px;background:rgba(44,33,26,.14);overflow:hidden">
-            <div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#c4562e,#d99a2b);width:{{ progressPct }};transition:width .4s cubic-bezier(.22,1,.36,1)"></div>
+          <div style="margin-top:11px;height:8px;border-radius:999px;background:rgba(237,230,218,.12);overflow:hidden">
+            <div style="height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--hi));width:{{ progressPct }};transition:width .4s cubic-bezier(.22,1,.36,1)"></div>
           </div>
-          <div style="font:500 12px 'Alegreya Sans',sans-serif;color:#8a6b4d;margin-top:6px">{{ stepCounter }}</div>
+          <div style="font:500 12px 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:6px">{{ stepCounter }}</div>
         </div>
 
         <div style="flex:1;overflow-y:auto;padding:28px 26px 24px">
@@ -159,7 +159,7 @@
           <sc-if value="{{ isTournament }}" hint-placeholder-val="{{ true }}">
             <div style="animation:rise .3s ease both">
               <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.qTournament }}</h2>
-              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:#5b4a3c;margin:8px 0 22px">{{ t.qTournamentSub }}</p>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 22px">{{ t.qTournamentSub }}</p>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
                 <sc-for list="{{ tournamentOptions }}" as="opt" hint-placeholder-count="3">
                   <button onClick="{{ opt.onPick }}" style="{{ opt.cardStyle }}" style-hover="transform:translateY(-3px)">
@@ -176,32 +176,32 @@
           <sc-if value="{{ isDetails }}" hint-placeholder-val="{{ false }}">
             <div style="animation:rise .3s ease both">
               <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.detailsTitle }}</h2>
-              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:#5b4a3c;margin:8px 0 22px">{{ t.detailsSub }}</p>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 22px">{{ t.detailsSub }}</p>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
                 <label style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
-                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b5540">{{ t.fEmail }}</span>
-                  <input type="email" value="{{ personal.email }}" onInput="{{ h.onEmail }}" onBlur="{{ h.touchEmail }}" placeholder="name@email.com" style="{{ emailInputStyle }}" style-focus="border-color:#c4562e">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fEmail }}</span>
+                  <input type="email" value="{{ personal.email }}" onInput="{{ h.onEmail }}" onBlur="{{ h.touchEmail }}" placeholder="name@email.com" style="{{ emailInputStyle }}" style-focus="border-color:var(--hi)">
                   <sc-if value="{{ emailBad }}" hint-placeholder-val="{{ false }}">
                     <span style="{{ errMsgStyle }}">{{ t.errEmail }}</span>
                   </sc-if>
                 </label>
                 <label style="display:flex;flex-direction:column;gap:6px">
-                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b5540">{{ t.fFirst }}</span>
-                  <input value="{{ personal.firstName }}" onInput="{{ h.onFirst }}" onBlur="{{ h.touchFirst }}" style="{{ firstInputStyle }}" style-focus="border-color:#c4562e">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fFirst }}</span>
+                  <input value="{{ personal.firstName }}" onInput="{{ h.onFirst }}" onBlur="{{ h.touchFirst }}" style="{{ firstInputStyle }}" style-focus="border-color:var(--hi)">
                   <sc-if value="{{ firstBad }}" hint-placeholder-val="{{ false }}">
                     <span style="{{ errMsgStyle }}">{{ t.errFirst }}</span>
                   </sc-if>
                 </label>
                 <label style="display:flex;flex-direction:column;gap:6px">
-                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b5540">{{ t.fLast }}</span>
-                  <input value="{{ personal.lastName }}" onInput="{{ h.onLast }}" onBlur="{{ h.touchLast }}" style="{{ lastInputStyle }}" style-focus="border-color:#c4562e">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fLast }}</span>
+                  <input value="{{ personal.lastName }}" onInput="{{ h.onLast }}" onBlur="{{ h.touchLast }}" style="{{ lastInputStyle }}" style-focus="border-color:var(--hi)">
                   <sc-if value="{{ lastBad }}" hint-placeholder-val="{{ false }}">
                     <span style="{{ errMsgStyle }}">{{ t.errLast }}</span>
                   </sc-if>
                 </label>
                 <label style="display:flex;flex-direction:column;gap:6px">
-                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b5540">{{ t.fMobile }}</span>
-                  <input type="tel" inputmode="numeric" maxlength="10" value="{{ personal.mobile }}" onInput="{{ h.onMobile }}" onBlur="{{ h.touchMobile }}" placeholder="69xxxxxxxx" style="{{ mobileInputStyle }}" style-focus="border-color:#c4562e">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fMobile }}</span>
+                  <input type="tel" inputmode="numeric" maxlength="10" value="{{ personal.mobile }}" onInput="{{ h.onMobile }}" onBlur="{{ h.touchMobile }}" placeholder="69xxxxxxxx" style="{{ mobileInputStyle }}" style-focus="border-color:var(--hi)">
                   <sc-if value="{{ mobileBad }}" hint-placeholder-val="{{ false }}">
                     <span style="{{ errMsgStyle }}">{{ t.errMobile }}</span>
                   </sc-if>
@@ -214,15 +214,15 @@
           <sc-if value="{{ isTeam }}" hint-placeholder-val="{{ false }}">
             <div style="animation:rise .3s ease both">
               <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.teamTitle }}</h2>
-              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:#5b4a3c;margin:8px 0 18px">{{ t.teamSub }}</p>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 18px">{{ t.teamSub }}</p>
 
               <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:end;margin-bottom:16px">
                 <label style="display:flex;flex-direction:column;gap:6px">
-                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b5540">{{ t.fTeamName }}</span>
-                  <input value="{{ team.name }}" onInput="{{ h.onTeamName }}" placeholder="{{ t.teamNamePh }}" style="border:2px solid rgba(44,33,26,.25);border-radius:12px;padding:13px 15px;font-size:16px;background:#faf3e6;color:#2c211a" style-focus="border-color:#c4562e">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fTeamName }}</span>
+                  <input value="{{ team.name }}" onInput="{{ h.onTeamName }}" placeholder="{{ t.teamNamePh }}" style="border:2px solid rgba(237,230,218,.25);border-radius:12px;padding:13px 15px;font-size:16px;background:var(--surface-2);color:var(--text)" style-focus="border-color:var(--hi)">
                 </label>
                 <div style="display:flex;flex-direction:column;gap:6px">
-                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b5540">{{ t.jerseyLabel }}</span>
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.jerseyLabel }}</span>
                   <div style="display:flex;gap:7px;flex-wrap:wrap">
                     <sc-for list="{{ jerseyOptions }}" as="j" hint-placeholder-count="8">
                       <button onClick="{{ j.onPick }}" title="{{ j.name }}" style="{{ j.swatchStyle }}"></button>
@@ -232,25 +232,25 @@
               </div>
 
               <!-- ROSTER SQUAD CARDS -->
-              <div style="position:relative;border-radius:16px;background:radial-gradient(120% 140% at 50% 0%,#f7ecd8,#e0c69e);border:2px solid #2c211a;box-shadow:inset 0 2px 0 rgba(255,255,255,.4);overflow:hidden;margin-bottom:6px;padding:20px 14px 16px">
-                <div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(44,33,26,.05) 0 2px,transparent 2px 34px);pointer-events:none"></div>
+              <div style="position:relative;border-radius:16px;background:radial-gradient(120% 140% at 50% 0%,var(--surface-2),var(--surface));border:2px solid var(--ink);box-shadow:inset 0 2px 0 rgba(237,230,218,.1);overflow:hidden;margin-bottom:6px;padding:20px 14px 16px">
+                <div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(237,230,218,.05) 0 2px,transparent 2px 34px);pointer-events:none"></div>
                 <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding:6px 6px 10px">
                   <sc-for list="{{ roster }}" as="p" hint-placeholder-count="3">
                     <div style="{{ p.cardWrapStyle }}">
-                      <div style="position:relative;width:150px;flex:none;background:#faf3e6;border:3px solid #2c211a;border-radius:14px;padding:13px 10px 11px;box-shadow:0 7px 0 rgba(44,33,26,.22);text-align:center">
+                      <div style="position:relative;width:150px;flex:none;background:var(--surface);border:3px solid var(--ink);border-radius:14px;padding:13px 10px 11px;box-shadow:0 7px 0 var(--ink);text-align:center">
                         <!-- jersey -->
                         <div style="position:relative;height:132px">
-                          <div style="position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:82px;height:8px;background:rgba(44,33,26,.15);border-radius:50%;filter:blur(.5px)"></div>
+                          <div style="position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:82px;height:8px;background:rgba(0,0,0,.5);border-radius:50%;filter:blur(.5px)"></div>
                           <!-- centering wrapper: sway animates rotation only, so it cannot clobber the centering transform -->
                           <div style="position:absolute;left:50%;top:0;transform:translateX(-50%);width:130px;height:124px">
                             <div style="{{ p.jerseySwayStyle }}">
                               <!-- sleeveless tank body: armholes are scooped out of the shoulders below -->
-                              <div style="position:absolute;left:50%;top:8px;transform:translateX(-50%);width:92px;height:106px;background:{{ p.hex }};border:2.5px solid #2c211a;border-radius:22px 22px 8px 8px;z-index:2;overflow:hidden">
+                              <div style="position:absolute;left:50%;top:8px;transform:translateX(-50%);width:92px;height:106px;background:{{ p.hex }};border:2.5px solid var(--ink);border-radius:22px 22px 8px 8px;z-index:2;overflow:hidden">
                                 <!-- armhole scoops: card-coloured circles biting into each shoulder -->
-                                <div style="position:absolute;left:-19px;top:-9px;width:38px;height:52px;background:#faf3e6;border-right:2.5px solid #2c211a;border-radius:50%;z-index:3"></div>
-                                <div style="position:absolute;right:-19px;top:-9px;width:38px;height:52px;background:#faf3e6;border-left:2.5px solid #2c211a;border-radius:50%;z-index:3"></div>
+                                <div style="position:absolute;left:-19px;top:-9px;width:38px;height:52px;background:var(--surface);border-right:2.5px solid var(--ink);border-radius:50%;z-index:3"></div>
+                                <div style="position:absolute;right:-19px;top:-9px;width:38px;height:52px;background:var(--surface);border-left:2.5px solid var(--ink);border-radius:50%;z-index:3"></div>
                                 <!-- collar -->
-                                <div style="position:absolute;left:50%;top:-11px;transform:translateX(-50%);width:34px;height:19px;background:#faf3e6;border:2.5px solid #2c211a;border-radius:0 0 15px 15px;z-index:4"></div>
+                                <div style="position:absolute;left:50%;top:-11px;transform:translateX(-50%);width:34px;height:19px;background:var(--surface);border:2.5px solid var(--ink);border-radius:0 0 15px 15px;z-index:4"></div>
                                 <!-- number -->
                                 <div style="position:absolute;left:0;right:0;top:50px;font:700 42px/1 'Oswald',sans-serif;color:{{ p.badgeFg }};text-align:center;letter-spacing:.02em;z-index:2">{{ p.number }}</div>
                               </div>
@@ -259,28 +259,28 @@
                             </div>
                           </div>
                         </div>
-                        <div style="font:500 11px/1.3 'Alegreya Sans',sans-serif;font-style:italic;color:#a5401f;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.cardNick }}</div>
+                        <div style="font:500 11px/1.3 'Alegreya Sans',sans-serif;font-style:italic;color:var(--accent-text);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.cardNick }}</div>
                       </div>
                     </div>
                   </sc-for>
                 </div>
-                <div style="text-align:center;font:600 10px 'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(44,33,26,.4)">{{ t.tapRotate }}</div>
+                <div style="text-align:center;font:600 10px 'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">{{ t.tapRotate }}</div>
               </div>
 
               <!-- compact player rows -->
               <div style="display:flex;flex-direction:column;gap:9px">
                 <sc-for list="{{ roster }}" as="p" hint-placeholder-count="3">
-                  <div style="display:grid;grid-template-columns:26px 1.3fr 1fr auto;gap:9px;align-items:center;background:#faf3e6;border:2px solid rgba(44,33,26,.2);border-radius:12px;padding:8px 10px">
-                    <div style="width:22px;height:22px;border-radius:50%;background:{{ p.hex }};border:2px solid #2c211a;font:700 11px/18px 'Oswald',sans-serif;text-align:center;color:{{ p.badgeFg }}">{{ p.number }}</div>
+                  <div style="display:grid;grid-template-columns:26px 1.3fr 1fr auto;gap:9px;align-items:center;background:var(--surface);border:2px solid rgba(237,230,218,.16);border-radius:12px;padding:8px 10px">
+                    <div style="width:22px;height:22px;border-radius:50%;background:{{ p.hex }};border:2px solid var(--ink);font:700 11px/18px 'Oswald',sans-serif;text-align:center;color:{{ p.badgeFg }}">{{ p.number }}</div>
                     <sc-if value="{{ p.editable }}" hint-placeholder-val="{{ true }}">
-                      <input value="{{ p.name }}" onInput="{{ p.onName }}" placeholder="{{ p.namePh }}" style="border:none;border-bottom:2px solid rgba(44,33,26,.18);background:transparent;padding:7px 2px;font-size:15px;color:#2c211a;min-width:0" style-focus="border-color:#c4562e">
+                      <input value="{{ p.name }}" onInput="{{ p.onName }}" placeholder="{{ p.namePh }}" style="border:none;border-bottom:2px solid rgba(237,230,218,.18);background:transparent;padding:7px 2px;font-size:15px;color:var(--text);min-width:0" style-focus="border-color:var(--hi)">
                     </sc-if>
                     <sc-if value="{{ p.readonlyName }}" hint-placeholder-val="{{ false }}">
-                      <div style="font:600 15px 'Alegreya Sans',sans-serif;padding:7px 2px;color:#2c211a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }} <span style="font:600 10px 'Oswald',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#a5401f">· {{ t.captainTag }}</span></div>
+                      <div style="font:600 15px 'Alegreya Sans',sans-serif;padding:7px 2px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }} <span style="font:600 10px 'Oswald',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-text)">· {{ t.captainTag }}</span></div>
                     </sc-if>
-                    <input value="{{ p.nick }}" onInput="{{ p.onNick }}" placeholder="{{ t.nickPh }}" style="border:none;border-bottom:2px solid rgba(44,33,26,.18);background:transparent;padding:7px 2px;font-size:14px;color:#a5401f;min-width:0;font-style:italic" style-focus="border-color:#c4562e">
+                    <input value="{{ p.nick }}" onInput="{{ p.onNick }}" placeholder="{{ t.nickPh }}" style="border:none;border-bottom:2px solid rgba(237,230,218,.18);background:transparent;padding:7px 2px;font-size:14px;color:var(--accent-text);min-width:0;font-style:italic" style-focus="border-color:var(--hi)">
                     <sc-if value="{{ p.removable }}" hint-placeholder-val="{{ false }}">
-                      <button onClick="{{ p.onRemove }}" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(44,33,26,.2);background:transparent;color:#a5401f;font-size:15px;cursor:pointer" style-hover="background:rgba(165,64,31,.1)">✕</button>
+                      <button onClick="{{ p.onRemove }}" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(237,230,218,.2);background:transparent;color:var(--accent-text);font-size:15px;cursor:pointer" style-hover="background:rgba(224,120,76,.14)">✕</button>
                     </sc-if>
                     <sc-if value="{{ p.notRemovable }}" hint-placeholder-val="{{ true }}">
                       <div style="width:28px"></div>
@@ -288,7 +288,7 @@
                   </div>
                 </sc-for>
                 <sc-if value="{{ canAddSub }}" hint-placeholder-val="{{ true }}">
-                  <button onClick="{{ h.addSub }}" style="display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed rgba(44,33,26,.35);background:transparent;border-radius:12px;padding:11px;font:600 13px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6b5540;cursor:pointer" style-hover="border-color:#c4562e;color:#c4562e">
+                  <button onClick="{{ h.addSub }}" style="display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed rgba(237,230,218,.28);background:transparent;border-radius:12px;padding:11px;font:600 13px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer" style-hover="border-color:var(--accent-text);color:var(--accent-text)">
                     <span style="font-size:18px;line-height:1">＋</span> {{ t.addSub }}
                   </button>
                 </sc-if>
@@ -300,15 +300,15 @@
           <sc-if value="{{ isNickname }}" hint-placeholder-val="{{ false }}">
             <div style="animation:rise .3s ease both">
               <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.nickTitle }}</h2>
-              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:#5b4a3c;margin:8px 0 22px">{{ t.nickSub }}</p>
-              <div style="background:#2c211a;border:2px solid #2c211a;border-radius:16px;padding:22px;box-shadow:0 8px 0 rgba(0,0,0,.3);margin-bottom:20px">
-                <div style="font:600 11px 'Oswald',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e6b422;text-align:center">{{ t.scoreboardName }}</div>
-                <div style="font:700 clamp(30px,6vw,52px)/1 'Oswald',sans-serif;text-transform:uppercase;color:#f4e9d6;text-align:center;margin-top:8px;letter-spacing:.04em;min-height:1em;word-break:break-word">{{ solo.preview }}</div>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 22px">{{ t.nickSub }}</p>
+              <div style="background:var(--surface);border:2px solid var(--ink);border-radius:16px;padding:22px;box-shadow:0 8px 0 rgba(0,0,0,.3);margin-bottom:20px">
+                <div style="font:600 11px 'Oswald',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--hi);text-align:center">{{ t.scoreboardName }}</div>
+                <div style="font:700 clamp(30px,6vw,52px)/1 'Oswald',sans-serif;text-transform:uppercase;color:var(--text);text-align:center;margin-top:8px;letter-spacing:.04em;min-height:1em;word-break:break-word">{{ solo.preview }}</div>
               </div>
               <label style="display:flex;flex-direction:column;gap:6px">
-                <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#6b5540">{{ t.nickFieldLabel }}</span>
-                <input value="{{ solo.nickname }}" onInput="{{ h.onSolo }}" maxlength="14" placeholder="MVP" style="border:2px solid rgba(44,33,26,.25);border-radius:12px;padding:14px 16px;font:600 18px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;background:#faf3e6;color:#2c211a" style-focus="border-color:#c4562e">
-                <span style="font:400 13px/1.4 'Alegreya Sans',sans-serif;color:#8a6b4d;font-style:italic">{{ t.nickHelp }}</span>
+                <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.nickFieldLabel }}</span>
+                <input value="{{ solo.nickname }}" onInput="{{ h.onSolo }}" maxlength="14" placeholder="MVP" style="border:2px solid rgba(237,230,218,.25);border-radius:12px;padding:14px 16px;font:600 18px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;background:var(--surface-2);color:var(--text)" style-focus="border-color:var(--hi)">
+                <span style="font:400 13px/1.4 'Alegreya Sans',sans-serif;color:var(--muted);font-style:italic">{{ t.nickHelp }}</span>
               </label>
             </div>
           </sc-if>
@@ -317,14 +317,14 @@
           <sc-if value="{{ isTerms }}" hint-placeholder-val="{{ false }}">
             <div style="animation:rise .3s ease both">
               <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.termsTitle }}</h2>
-              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:#5b4a3c;margin:8px 0 20px">{{ t.termsSub }}</p>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 20px">{{ t.termsSub }}</p>
               <div style="display:flex;flex-direction:column;gap:12px">
                 <sc-for list="{{ terms }}" as="tm" hint-placeholder-count="4">
-                  <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:#faf3e6;border:2px solid rgba(44,33,26,.16);border-radius:14px;padding:15px 17px">
-                    <div style="width:34px;height:34px;border-radius:50%;background:rgba(196,86,46,.14);border:2px solid #c4562e;color:#a5401f;font:700 15px/30px 'Oswald',sans-serif;text-align:center">{{ tm.n }}</div>
+                  <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--surface);border:2px solid rgba(237,230,218,.14);border-radius:14px;padding:15px 17px">
+                    <div style="width:34px;height:34px;border-radius:50%;background:rgba(196,86,46,.14);border:2px solid var(--accent-text);color:var(--accent-text);font:700 15px/30px 'Oswald',sans-serif;text-align:center">{{ tm.n }}</div>
                     <div>
                       <div style="font:600 15px 'Oswald',sans-serif;letter-spacing:.03em;text-transform:uppercase">{{ tm.title }}</div>
-                      <div style="font:400 14px/1.5 'Alegreya Sans',sans-serif;color:#5b4a3c;margin-top:4px">{{ tm.body }}</div>
+                      <div style="font:400 14px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:4px">{{ tm.body }}</div>
                     </div>
                   </div>
                 </sc-for>
@@ -346,30 +346,30 @@
               <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
                 <div>
                   <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.reviewTitle }}</h2>
-                  <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:#5b4a3c;margin:8px 0 20px">{{ t.reviewSub }}</p>
+                  <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 20px">{{ t.reviewSub }}</p>
                   <div style="display:flex;flex-direction:column;gap:10px">
                     <sc-for list="{{ summary }}" as="s" hint-placeholder-count="4">
-                      <div style="display:grid;grid-template-columns:150px 1fr;gap:12px;padding:12px 16px;background:#faf3e6;border:2px solid rgba(44,33,26,.14);border-radius:12px">
-                        <div style="font:600 12px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#a5401f">{{ s.k }}</div>
-                        <div style="font:500 15px 'Alegreya Sans',sans-serif;color:#2c211a">{{ s.v }}</div>
+                      <div style="display:grid;grid-template-columns:150px 1fr;gap:12px;padding:12px 16px;background:var(--surface);border:2px solid rgba(237,230,218,.14);border-radius:12px">
+                        <div style="font:600 12px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text)">{{ s.k }}</div>
+                        <div style="font:500 15px 'Alegreya Sans',sans-serif;color:var(--text)">{{ s.v }}</div>
                       </div>
                     </sc-for>
                   </div>
                   <sc-if value="{{ submitError }}" hint-placeholder-val="{{ false }}">
-                    <div style="margin-top:14px;padding:12px 16px;background:rgba(165,64,31,.1);border:2px solid #a5401f;border-radius:12px;font:500 14px 'Alegreya Sans',sans-serif;color:#a5401f">{{ submitError }}</div>
+                    <div style="margin-top:14px;padding:12px 16px;background:rgba(224,120,76,.12);border:2px solid var(--accent-text);border-radius:12px;font:500 14px 'Alegreya Sans',sans-serif;color:var(--accent-text)">{{ submitError }}</div>
                   </sc-if>
                 </div>
               </sc-if>
               <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
                 <div style="text-align:center;padding:30px 0;animation:pop .4s ease both">
-                  <div style="width:96px;height:96px;margin:0 auto;border-radius:50%;background:#c4562e;border:5px solid #2c211a;box-shadow:0 8px 0 #8f3517;position:relative">
-                    <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:#2c211a;transform:translateX(-50%)"></div>
-                    <div style="position:absolute;left:0;right:0;top:50%;height:3px;background:#2c211a;transform:translateY(-50%)"></div>
+                  <div style="width:96px;height:96px;margin:0 auto;border-radius:50%;background:var(--accent);border:5px solid var(--ink);box-shadow:0 8px 0 var(--ink);position:relative">
+                    <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--ink);transform:translateX(-50%)"></div>
+                    <div style="position:absolute;left:0;right:0;top:50%;height:3px;background:var(--ink);transform:translateY(-50%)"></div>
                   </div>
                   <h2 style="font:700 34px/1 'Oswald',sans-serif;text-transform:uppercase;margin:24px 0 0">{{ t.successTitle }}</h2>
-                  <p style="font:400 17px/1.5 'Alegreya Sans',sans-serif;color:#5b4a3c;max-width:26em;margin:12px auto 0">{{ t.successBody }}</p>
-                  <p style="font:500 14px 'Alegreya Sans',sans-serif;color:#8a6b4d;margin-top:14px">{{ t.successNote }}</p>
-                  <button onClick="{{ h.closeWizard }}" style="margin-top:24px;background:#2c211a;color:#f4e9d6;border:none;border-radius:999px;padding:14px 30px;font:700 15px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 5px 0 #000">{{ t.done }}</button>
+                  <p style="font:400 17px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);max-width:26em;margin:12px auto 0">{{ t.successBody }}</p>
+                  <p style="font:500 14px 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:14px">{{ t.successNote }}</p>
+                  <button onClick="{{ h.closeWizard }}" style="margin-top:24px;background:var(--surface);color:var(--text);border:none;border-radius:999px;padding:14px 30px;font:700 15px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 5px 0 var(--ink)">{{ t.done }}</button>
                 </div>
               </sc-if>
             </div>
@@ -379,7 +379,7 @@
 
         <!-- footer nav -->
         <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
-          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 26px;border-top:2px solid rgba(44,33,26,.12);background:rgba(236,220,192,.92)">
+          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 26px;border-top:2px solid rgba(237,230,218,.12);background:rgba(18,16,14,.94)">
             <button onClick="{{ h.prev }}" style="{{ backStyle }}">‹ {{ t.back }}</button>
             <button onClick="{{ h.next }}" style="{{ nextStyle }}">{{ nextLabel }}</button>
           </div>
