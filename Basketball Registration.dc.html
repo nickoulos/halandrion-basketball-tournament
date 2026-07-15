@@ -40,7 +40,7 @@
 </helmet>
 
 <div style="min-height:100vh;position:relative;overflow-x:hidden">
-  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 82% -10%,rgba(217,154,43,.30),transparent 55%),radial-gradient(110% 80% at -10% 100%,rgba(196,86,46,.22),transparent 60%)"></div>
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 82% -10%,rgba(240,160,43,.10),transparent 55%),radial-gradient(110% 80% at -10% 100%,rgba(196,86,46,.08),transparent 60%)"></div>
 
   <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 26px;background:rgba(236,220,192,.82);backdrop-filter:blur(10px);border-bottom:2px solid rgba(44,33,26,.12)">
     <div style="display:flex;align-items:center;gap:12px">
@@ -60,7 +60,8 @@
   </header>
 
   <main style="position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 22px">
-    <section style="padding:60px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center">
+    <section style="position:relative;padding:60px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center">
+      <div style="position:absolute;inset:-60px -50vw 0;z-index:-1;background-image:linear-gradient(90deg,rgba(18,16,14,.96) 0%,rgba(18,16,14,.88) 38%,rgba(18,16,14,.55) 70%,rgba(18,16,14,.35) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 22%),url('assets/court.jpg');background-size:cover,cover,cover;background-position:center,center,72% center;background-repeat:no-repeat"></div>
       <div style="animation:rise .6s ease both">
         <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(196,86,46,.14);border:1.5px solid rgba(196,86,46,.4);color:#a5401f;border-radius:999px;padding:6px 14px;font:600 12px 'Oswald',sans-serif;letter-spacing:.12em;text-transform:uppercase">{{ t.heroKicker }}</div>
         <h1 style="{{ heroH1Style }}">{{ t.heroLine1 }}<br><span style="color:#c4562e">{{ t.heroLine2 }}</span></h1>
