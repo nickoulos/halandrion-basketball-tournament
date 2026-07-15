@@ -13,13 +13,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Bangers&display=swap" rel="stylesheet">
 <style>
+  :root{
+    --bg:#12100E; --surface:#1C1916; --surface-2:#26221E;
+    --text:#EDE6DA; --muted:#9A8F80; --line:#E8E2D6;
+    --accent:#C4562E; --accent-text:#E0784C; --hi:#F0A02B;
+    --ok:#4FAE77; --ink:#000; --on-accent:#FFFFFF;
+  }
   *{box-sizing:border-box}
-  body{margin:0;background:#ecdcc0;color:#2c211a;font-family:'Alegreya Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-  a{color:#a5401f;text-decoration:none}
-  a:hover{color:#c4562e}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Alegreya Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-text);text-decoration:none}
+  a:hover{color:var(--hi)}
   input,button,textarea{font-family:inherit}
   input:focus,textarea:focus{outline:none}
-  ::selection{background:#c4562e;color:#faf3e6}
+  ::selection{background:var(--accent);color:var(--on-accent)}
   @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
   @keyframes sway{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
   @keyframes rise{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}
