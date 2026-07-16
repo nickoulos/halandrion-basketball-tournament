@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Bangers&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Bangers&family=Sofia+Sans+Extra+Condensed:wght@700..1000&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#12100E; --surface:#1C1916; --surface-2:#26221E;
@@ -31,6 +31,12 @@
   @keyframes rise{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}
   @keyframes pop{0%{opacity:0;transform:scale(.85)}100%{opacity:1;transform:scale(1)}}
   @keyframes spinmark{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+  /* ── hero basketball ── */
+  @keyframes ballspin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+  .ball{transition:transform .4s ease}
+  .ball-wrap:hover .ball{animation:ballspin 1.4s linear infinite}
+  @media (prefers-reduced-motion:reduce){.ball-wrap:hover .ball{animation:none}}
 
   /* ── jersey card loops ── */
   @keyframes jerseySway{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
@@ -63,8 +69,7 @@
     <section style="position:relative;padding:60px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center">
       <div style="position:absolute;inset:-60px -50vw 0;z-index:-1;background-image:linear-gradient(90deg,rgba(18,16,14,.96) 0%,rgba(18,16,14,.88) 38%,rgba(18,16,14,.55) 70%,rgba(18,16,14,.35) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 22%),url('assets/court.jpg');background-size:cover,cover,cover;background-position:center,center,72% center;background-repeat:no-repeat"></div>
       <div style="animation:rise .6s ease both">
-        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(196,86,46,.14);border:1.5px solid rgba(196,86,46,.4);color:var(--accent-text);border-radius:999px;padding:6px 14px;font:600 12px 'Oswald',sans-serif;letter-spacing:.12em;text-transform:uppercase">{{ t.heroKicker }}</div>
-        <h1 style="{{ heroH1Style }}">{{ t.heroLine1 }}<br><span style="color:var(--hi)">{{ t.heroLine2 }}</span></h1>
+        <h1 style="{{ heroH1Style }}">{{ heroLine1Caps }}<br><span style="color:var(--hi)">{{ heroLine2Caps }}</span></h1>
         <p style="font:400 19px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);max-width:29em;margin:20px 0 0;text-wrap:pretty">{{ t.heroBody }}</p>
         <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:28px;align-items:center">
           <button onClick="{{ h.openWizard }}" style="background:var(--accent);color:var(--on-accent);border:none;border-radius:999px;padding:16px 30px;font:700 17px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 0 var(--ink)" style-hover="transform:translateY(-2px);box-shadow:0 8px 0 var(--ink)" style-active="transform:translateY(3px);box-shadow:0 2px 0 var(--ink)">{{ t.heroCta }}</button>
@@ -79,16 +84,15 @@
         <div style="position:relative;width:86%;border:6px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:0 12px 0 var(--ink),0 22px 36px rgba(0,0,0,.5);background:var(--surface);padding:34px 26px;text-align:center">
           <div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(217,154,43,.12) 0 3px,transparent 3px 46px),radial-gradient(120% 100% at 50% 0%,rgba(196,86,46,.35),transparent 60%)"></div>
           <div style="position:relative;font:600 11px 'Oswald',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--hi)">{{ t.infoFormat }}</div>
-          <div style="{{ formatBigStyle }}">{{ t.formatBig }}</div>
-          <div style="position:relative;font:400 15px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:10px;max-width:22em;margin-left:auto;margin-right:auto">{{ t.formatSub }}</div>
-          <div style="position:relative;display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap">
-            <span style="background:rgba(230,180,34,.14);border:1.5px solid rgba(230,180,34,.5);color:var(--hi);border-radius:999px;padding:6px 14px;font:600 12px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase">3on3</span>
-            <span style="background:rgba(230,180,34,.14);border:1.5px solid rgba(230,180,34,.5);color:var(--hi);border-radius:999px;padding:6px 14px;font:600 12px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase">1v1</span>
-          </div>
+          <div style="{{ formatBigStyle }}">{{ fb1 }}<span style="font-size:.72em">{{ fb2 }}</span>{{ fb3 }}{{ fb4 }}{{ fb5 }}<span style="font-size:.72em">{{ fb6 }}</span>{{ fb7 }}</div>
         </div>
-        <div style="position:absolute;right:-6px;bottom:-14px;width:96px;height:96px;border-radius:50%;background:var(--accent);border:5px solid var(--ink);box-shadow:0 6px 0 var(--ink);animation:flt 4.5s ease-in-out infinite">
-          <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--ink);transform:translateX(-50%)"></div>
-          <div style="position:absolute;left:0;right:0;top:50%;height:3px;background:var(--ink);transform:translateY(-50%)"></div>
+        <div class="ball-wrap" style="position:absolute;right:-6px;bottom:-14px;width:96px;height:96px;animation:flt 4.5s ease-in-out infinite">
+          <div class="ball" style="position:relative;width:100%;height:100%;border-radius:50%;background:radial-gradient(80% 80% at 32% 28%,rgba(255,255,255,.28),transparent 58%),var(--accent);border:5px solid var(--ink);box-shadow:0 6px 0 var(--ink);overflow:hidden">
+            <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--ink);transform:translateX(-50%)"></div>
+            <div style="position:absolute;left:0;right:0;top:50%;height:3px;background:var(--ink);transform:translateY(-50%)"></div>
+            <div style="position:absolute;top:-12%;bottom:-12%;left:-30%;width:76%;border:3px solid var(--ink);border-radius:50%"></div>
+            <div style="position:absolute;top:-12%;bottom:-12%;right:-30%;width:76%;border:3px solid var(--ink);border-radius:50%"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -389,7 +393,7 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1120,&quot;height&quot;:760},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gr&quot;,&quot;en&quot;],&quot;default&quot;:&quot;gr&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1120,&quot;height&quot;:760},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gr&quot;,&quot;en&quot;],&quot;default&quot;:&quot;en&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
 class Component extends DCLogic {
   // ── set this after deploying your Apps Script (see chat) ──
   SCRIPT_URL = "";
@@ -397,7 +401,7 @@ class Component extends DCLogic {
   constructor(props){
     super(props);
     this.state = {
-      lang: (props.lang === 'en' ? 'en' : 'gr'),
+      lang: (props.lang === 'gr' ? 'gr' : 'en'),
       wizardOpen: false,
       stepIndex: 0,
       tournament: '',              // '3on3' | '1v1' | 'both'
@@ -434,7 +438,6 @@ class Component extends DCLogic {
       headFont:"'Bangers','Oswald',sans-serif",
       brand:'Chalandri Basketball Cup', brandSub:'Asia Minor Refugees Assoc. of Chalandri — Roots',
       register:'Register', langLabel:'EN', otherLang:'ΕΛ',
-      heroKicker:'Chalandri Settlement · 3on3 & 1v1',
       heroLine1:'The neighbourhood', heroLine2:'plays ball',
       heroBody:'The first street-basketball tournament at the Chalandri Settlement. Grab two friends, pick your colours and claim the court — or go solo in the 1v1.',
       heroCta:'Register your team',
@@ -443,7 +446,7 @@ class Component extends DCLogic {
       infoWhen:'When', dateBig:'Sat 26 & Sun 27 Sep', dateSub:'Two days of games, all weekend',
       infoWhere:'Where', placeBig:'Chalandri Settlement', placeSub:'Mikras Asias & Aigaiou St.',
       infoCost:'Cost', costBig:'Free', costSub:'No entry fee — just show up and play',
-      infoFormat:'Format', formatBig:'3on3 + 1v1', formatSub:'Team play and solo showdowns',
+      infoFormat:'Format', formatBig:'3on3 / 1v1',
       soon:'Coming soon', scheduleTitle:'Schedule & bracket', scheduleBody:'Match times, group draw and the tournament bracket will be announced here once registrations close.',
       chipBracket:'Bracket', chipTeams:'Teams', chipTimes:'Match times',
       footerNote:'Made with love for the neighbourhood',
@@ -476,19 +479,19 @@ class Component extends DCLogic {
       sumTeam:'Team', sumJersey:'Jersey', sumRoster:'Roster', sumNick:'1v1 name',
     };
     const gr = {
-      headFont:"'Oswald',sans-serif",
+      // Sofia Sans XC ships real Greek glyphs (Bangers is Latin-only); w900 to hold weight next to Bangers
+      headFont:"'Sofia Sans Extra Condensed','Oswald',sans-serif",
       brand:'Κύπελλο Μπάσκετ Χαλανδρίου', brandSub:'Σύνδεσμος Μικρασιατών Χαλανδρίου — Ρίζες',
       register:'Εγγραφή', langLabel:'ΕΛ', otherLang:'EN',
-      heroKicker:'Συνοικισμός Χαλανδρίου · 3ον3 & 1v1',
-      heroLine1:'Ο Συνοικισμός', heroLine2:'παίζει μπάλα',
-      heroBody:'Το πρώτο τουρνουά μπάσκετ του δρόμου στον Συνοικισμό Χαλανδρίου. Πάρε δύο φίλους, διάλεξε χρώματα και κατέκτησε το γήπεδο — ή παίξε μόνος σου στο 1v1.',
+      heroLine1:'Συνοικιακό', heroLine2:'μπασκετάκι',
+      heroBody:'Το πρώτο τουρνουά της γειτονιάς, στον Συνοικισμό Χαλανδρίου. Πάρε δύο φίλους, διάλεξε χρώματα και κατέβα στο γήπεδο — ή παίξε μόνος σου στο 1v1.',
       heroCta:'Δήλωσε την ομάδα σου',
       freeChip:'Δωρεάν συμμετοχή', prizeChip:'Έπαθλα για τους νικητές',
       heritageCaption:'Μικρά Ασία · Ρίζες',
       infoWhen:'Πότε', dateBig:'Σάβ 26 & Κυρ 27 Σεπ', dateSub:'Δύο μέρες αγώνων, όλο το Σαββατοκύριακο',
       infoWhere:'Πού', placeBig:'Συνοικισμός Χαλανδρίου', placeSub:'Μικράς Ασίας & Αιγαίου',
       infoCost:'Κόστος', costBig:'Δωρεάν', costSub:'Χωρίς κόστος συμμετοχής — έλα και παίξε',
-      infoFormat:'Μορφή', formatBig:'3ον3 + 1v1', formatSub:'Ομαδικό παιχνίδι & μονομαχίες',
+      infoFormat:'Μορφή', formatBig:'3ον3 / 1v1',
       soon:'Σύντομα', scheduleTitle:'Πρόγραμμα & ταμπλό', scheduleBody:'Οι ώρες των αγώνων, η κλήρωση των ομίλων και το ταμπλό του τουρνουά θα ανακοινωθούν εδώ μόλις κλείσουν οι εγγραφές.',
       chipBracket:'Ταμπλό', chipTeams:'Ομάδες', chipTimes:'Ώρες αγώνων',
       footerNote:'Φτιαγμένο με αγάπη για τη γειτονιά',
@@ -521,7 +524,7 @@ class Component extends DCLogic {
       sumTeam:'Ομάδα', sumJersey:'Φανέλα', sumRoster:'Σύνθεση', sumNick:'Όνομα 1v1',
     };
     if(this.state.lang==='en') return en;
-    const BODY=new Set(['brandSub','heroBody','dateSub','placeSub','formatSub','costSub','scheduleBody','footerNote','qTournamentSub','to3desc','to1desc','tobdesc','detailsSub','teamSub','teamNamePh','nickPh','nickSub','nickHelp','termsSub','t1b','t2b','t3b','t4b','acceptLabel','reviewSub','successBody','successNote','errEmail','errFirst','errLast','errMobile']);
+    const BODY=new Set(['brandSub','heroBody','dateSub','placeSub','costSub','scheduleBody','footerNote','qTournamentSub','to3desc','to1desc','tobdesc','detailsSub','teamSub','teamNamePh','nickPh','nickSub','nickHelp','termsSub','t1b','t2b','t3b','t4b','acceptLabel','reviewSub','successBody','successNote','errEmail','errFirst','errLast','errMobile']);
     const out={}; for(const k in gr){ out[k]= BODY.has(k)? gr[k] : this.deTonos(gr[k]); } return out;
   }
 
@@ -745,15 +748,26 @@ class Component extends DCLogic {
     const badInputStyle="border:2px solid var(--accent-text);border-radius:12px;padding:13px 15px;font-size:16px;background:rgba(224,120,76,.1);color:var(--text);";
     const errMsgStyle="font:500 12px/1.4 'Alegreya Sans',sans-serif;color:var(--accent-text);margin-top:1px";
 
-    // graffiti-style headline font — Bangers (EN only, no Greek glyphs) falls back to bold Oswald for GR
-    const brandFontStyle=`font:700 15px/1 ${t.headFont};letter-spacing:.04em;text-transform:uppercase`;
-    const heroH1Style=`font:700 clamp(44px,7vw,90px)/.9 ${t.headFont};text-transform:uppercase;letter-spacing:${gr?'-.01em':'.02em'};margin:18px 0 0`;
-    const formatBigStyle=`position:relative;font:900 clamp(34px,5vw,54px)/1 ${t.headFont};text-transform:uppercase;margin-top:10px;color:var(--text);letter-spacing:${gr?'.01em':'.03em'}`;
+    // headline font — Bangers (EN, Latin-only) / Sofia Sans XC (GR, has Greek glyphs).
+    // Bangers has one weight and ignores the number; GR is variable, so push it heavy to match Bangers' presence.
+    const headW = gr?900:700;
+    // Greek drops tonos in all-caps (ΣΥΝΟΙΚΙΑΚΌ -> ΣΥΝΟΙΚΙΑΚΟ). CSS uppercase keeps the accent, so strip it here.
+    const caps = s => (s||'').toUpperCase()
+      .replace(/[ΆΈΉΊΌΎΏ]/g, c => 'ΆΈΉΊΌΎΏ'.indexOf(c)>=0 ? 'ΑΕΗΙΟΥΩ'['ΆΈΉΊΌΎΏ'.indexOf(c)] : c)
+      .replace(/Ϊ/g,'Ι').replace(/Ϋ/g,'Υ');
+    const brandFontStyle=`font:${headW} 15px/1 ${t.headFont};letter-spacing:.04em;text-transform:uppercase`;
+    const heroH1Style=`font:${gr?1000:700} clamp(${gr?'40px,6.2vw,80px':'44px,7vw,90px'})/.9 ${t.headFont};letter-spacing:${gr?'-.005em':'.02em'};margin:18px 0 0`;
+    const formatBigStyle=`position:relative;font:${gr?1000:900} clamp(34px,5vw,54px)/1 ${t.headFont};text-transform:uppercase;margin-top:10px;color:var(--text);letter-spacing:${gr?'.01em':'.03em'}`;
+    // shrink letter runs (on/v/ον) relative to the digits so "3on3 / 1v1" reads number-forward
+    const fbSegs=(t.formatBig||'').split(/([0-9]+|[^0-9]+)/).filter(Boolean);
+    const [fb1,fb2,fb3,fb4,fb5,fb6,fb7]=fbSegs;
 
     const nextBase="border:none;border-radius:999px;padding:13px 30px;font:700 15px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;transition:transform .12s;";
     return {
       t, langLabel:t.otherLang,
       brandFontStyle, heroH1Style, formatBigStyle,
+      heroLine1Caps:caps(t.heroLine1), heroLine2Caps:caps(t.heroLine2),
+      fb1, fb2, fb3, fb4, fb5, fb6, fb7,
       wizardOpen:st.wizardOpen,
       // steps flags
       isTournament:key==='tournament', isDetails:key==='details', isTeam:key==='team',
