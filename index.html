@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Bangers&family=Sofia+Sans+Extra+Condensed:wght@700..1000&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12100E; --surface:#1C1916; --surface-2:#26221E;
+    --text:#EDE6DA; --muted:#9A8F80; --line:#E8E2D6;
+    --accent:#C4562E; --accent-text:#E0784C; --hi:#F0A02B;
+    --ok:#4FAE77; --ink:#000; --on-accent:#FFFFFF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Alegreya Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-text);text-decoration:none}
+  a:hover{color:var(--hi)}
+  input,button,textarea{font-family:inherit}
+  input:focus,textarea:focus{outline:none}
+  ::selection{background:var(--accent);color:var(--on-accent)}
+  @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @keyframes sway{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+  @keyframes rise{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:translateY(0)}}
+  @keyframes pop{0%{opacity:0;transform:scale(.85)}100%{opacity:1;transform:scale(1)}}
+  @keyframes spinmark{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+  /* ── hero basketball ── */
+  @keyframes ballspin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+  .ball{transition:transform .4s ease}
+  .ball-wrap:hover .ball{animation:ballspin 1.4s linear infinite}
+  @media (prefers-reduced-motion:reduce){.ball-wrap:hover .ball{animation:none}}
+
+  /* ── jersey card loops ── */
+  @keyframes jerseySway{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
+  @keyframes cardFloat{0%,100%{transform:translateY(0) rotate(var(--tilt,0deg))}50%{transform:translateY(-7px) rotate(var(--tilt,0deg))}}
+  @keyframes courtShine{0%{background-position:-140% 0}100%{background-position:240% 0}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;position:relative;overflow-x:hidden">
+  <div style="position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 82% -10%,rgba(240,160,43,.10),transparent 55%),radial-gradient(110% 80% at -10% 100%,rgba(196,86,46,.08),transparent 60%)"></div>
+
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 26px;background:rgba(18,16,14,.85);backdrop-filter:blur(10px);border-bottom:2px solid rgba(237,230,218,.12)">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;border-radius:9px;border:3px solid var(--ink);position:relative;box-shadow:0 3px 0 var(--ink);flex:none;overflow:hidden;background:var(--surface)">
+        <img src="assets/heritage.jpg" alt="{{ t.heritageCaption }}" style="width:100%;height:100%;object-fit:cover;filter:sepia(.35) saturate(1.1) contrast(1.05) brightness(.88)">
+        <div style="position:absolute;inset:0;background:radial-gradient(circle,rgba(240,160,43,.12),rgba(18,16,14,.55))"></div>
+      </div>
+      <div style="line-height:1">
+        <div style="{{ brandFontStyle }}">{{ t.brand }}</div>
+        <div style="font:500 11px/1.3 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:3px">{{ t.brandSub }}</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onClick="{{ h.toggleLang }}" style="background:transparent;border:2px solid rgba(237,230,218,.25);border-radius:999px;padding:7px 13px;font:600 12px 'Oswald',sans-serif;letter-spacing:.06em;color:var(--text);cursor:pointer">{{ langLabel }}</button>
+      <button onClick="{{ h.openWizard }}" style="background:var(--surface);color:var(--text);border:none;border-radius:999px;padding:9px 18px;font:600 13px 'Oswald',sans-serif;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 0 var(--ink)" style-hover="background:var(--surface-2)">{{ t.register }}</button>
+    </div>
+  </header>
+
+  <main style="position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 22px">
+    <section style="position:relative;padding:60px 0 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center">
+      <div style="position:absolute;inset:-60px -50vw 0;z-index:-1;background-image:linear-gradient(90deg,rgba(18,16,14,.96) 0%,rgba(18,16,14,.88) 38%,rgba(18,16,14,.55) 70%,rgba(18,16,14,.35) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 22%),url('assets/court.jpg');background-size:cover,cover,cover;background-position:center,center,72% center;background-repeat:no-repeat"></div>
+      <div style="animation:rise .6s ease both">
+        <h1 style="{{ heroH1Style }}">{{ heroLine1Caps }}<br><span style="color:var(--hi)">{{ heroLine2Caps }}</span></h1>
+        <p style="font:400 19px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);max-width:29em;margin:20px 0 0;text-wrap:pretty">{{ t.heroBody }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:28px;align-items:center">
+          <button onClick="{{ h.openWizard }}" style="background:var(--accent);color:var(--on-accent);border:none;border-radius:999px;padding:16px 30px;font:700 17px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 0 var(--ink)" style-hover="transform:translateY(-2px);box-shadow:0 8px 0 var(--ink)" style-active="transform:translateY(3px);box-shadow:0 2px 0 var(--ink)">{{ t.heroCta }}</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(79,174,119,.16);border:1.5px solid rgba(79,174,119,.5);color:var(--ok);border-radius:999px;padding:8px 14px;font:600 12px 'Oswald',sans-serif;letter-spacing:.05em;text-transform:uppercase">{{ t.freeChip }}</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(217,154,43,.16);border:1.5px solid rgba(217,154,43,.55);color:var(--accent-text);border-radius:999px;padding:8px 14px;font:600 12px 'Oswald',sans-serif;letter-spacing:.05em;text-transform:uppercase">🏆 {{ t.prizeChip }}</span>
+          </div>
+        </div>
+      </div>
+      <div style="position:relative;min-height:340px;display:flex;justify-content:center;align-items:center">
+        <div style="position:absolute;inset:6px;background:repeating-linear-gradient(45deg,rgba(217,154,43,.18) 0 14px,transparent 14px 28px);border-radius:22px;transform:rotate(-3deg)"></div>
+        <div style="position:relative;width:86%;border:6px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:0 12px 0 var(--ink),0 22px 36px rgba(0,0,0,.5);background:var(--surface);padding:34px 26px;text-align:center">
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(217,154,43,.12) 0 3px,transparent 3px 46px),radial-gradient(120% 100% at 50% 0%,rgba(196,86,46,.35),transparent 60%)"></div>
+          <div style="position:relative;font:600 11px 'Oswald',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--hi)">{{ t.infoFormat }}</div>
+          <div style="{{ formatBigStyle }}">{{ fb1 }}<span style="font-size:.72em">{{ fb2 }}</span>{{ fb3 }}{{ fb4 }}{{ fb5 }}<span style="font-size:.72em">{{ fb6 }}</span>{{ fb7 }}</div>
+        </div>
+        <div class="ball-wrap" style="position:absolute;right:-6px;bottom:-14px;width:96px;height:96px;animation:flt 4.5s ease-in-out infinite">
+          <div class="ball" style="position:relative;width:100%;height:100%;border-radius:50%;background:radial-gradient(80% 80% at 32% 28%,rgba(255,255,255,.28),transparent 58%),var(--accent);border:5px solid var(--ink);box-shadow:0 6px 0 var(--ink);overflow:hidden">
+            <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--ink);transform:translateX(-50%)"></div>
+            <div style="position:absolute;left:0;right:0;top:50%;height:3px;background:var(--ink);transform:translateY(-50%)"></div>
+            <div style="position:absolute;top:-12%;bottom:-12%;left:-30%;width:76%;border:3px solid var(--ink);border-radius:50%"></div>
+            <div style="position:absolute;top:-12%;bottom:-12%;right:-30%;width:76%;border:3px solid var(--ink);border-radius:50%"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="info" style="scroll-margin-top:80px;position:relative;padding:22px 0">
+      <div style="position:absolute;left:0;right:0;top:0;bottom:0;border-top:2px dashed rgba(237,230,218,.2);border-bottom:2px dashed rgba(237,230,218,.2)"></div>
+      <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0">
+        <div style="padding:6px 24px 6px 4px">
+          <div style="font:600 11px 'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-text)">{{ t.infoWhen }}</div>
+          <div style="font:700 24px/1.1 'Oswald',sans-serif;text-transform:uppercase;margin-top:6px">{{ t.dateBig }}</div>
+          <div style="font:400 14px/1.4 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:3px">{{ t.dateSub }}</div>
+        </div>
+        <div style="padding:6px 24px;border-left:2px dashed rgba(237,230,218,.2)">
+          <div style="font:600 11px 'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-text)">{{ t.infoWhere }}</div>
+          <div style="font:700 22px/1.15 'Oswald',sans-serif;text-transform:uppercase;margin-top:6px">{{ t.placeBig }}</div>
+          <div style="font:400 14px/1.4 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:3px">{{ t.placeSub }}</div>
+        </div>
+        <div style="padding:6px 4px 6px 24px;border-left:2px dashed rgba(237,230,218,.2)">
+          <div style="font:600 11px 'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-text)">{{ t.infoCost }}</div>
+          <div style="font:700 24px/1.1 'Oswald',sans-serif;text-transform:uppercase;margin-top:6px;color:var(--ok)">{{ t.costBig }}</div>
+          <div style="font:400 14px/1.4 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:3px">{{ t.costSub }}</div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin:26px 0 56px;border-radius:20px;overflow:hidden;border:2px solid var(--ink);background:var(--surface);box-shadow:0 8px 0 var(--ink)">
+      <div style="height:10px;background:repeating-linear-gradient(90deg,var(--accent) 0 20px,var(--ink) 20px 40px)"></div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:26px 28px">
+        <div>
+          <div style="font:600 11px 'Oswald',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-text)">{{ t.soon }}</div>
+          <h2 style="font:700 clamp(28px,4vw,42px)/1 'Oswald',sans-serif;text-transform:uppercase;margin:8px 0 0">{{ t.scheduleTitle }}</h2>
+          <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);max-width:36em;margin:12px 0 0">{{ t.scheduleBody }}</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+            <span style="background:rgba(237,230,218,.06);border:1.5px dashed rgba(237,230,218,.28);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)">{{ t.chipBracket }}</span>
+            <span style="background:rgba(237,230,218,.06);border:1.5px dashed rgba(237,230,218,.28);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)">{{ t.chipTeams }}</span>
+            <span style="background:rgba(237,230,218,.06);border:1.5px dashed rgba(237,230,218,.28);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)">{{ t.chipTimes }}</span>
+          </div>
+        </div>
+        <div style="font:700 clamp(40px,6vw,72px)/.9 'Oswald',sans-serif;color:rgba(237,230,218,.12);text-transform:uppercase;text-align:right">TBA</div>
+      </div>
+    </section>
+
+    <footer style="padding:14px 0 40px;border-top:2px solid rgba(237,230,218,.12);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font:400 14px 'Alegreya Sans',sans-serif;color:var(--muted)">
+      <span>{{ t.brandSub }}</span>
+      <span>{{ t.footerNote }}</span>
+    </footer>
+  </main>
+
+  <!-- ===================== WIZARD ===================== -->
+  <sc-if value="{{ wizardOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);display:flex;justify-content:center" onClick="{{ h.backdropClose }}">
+      <div onClick="{{ h.stop }}" style="width:100%;max-width:880px;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 0 80px rgba(0,0,0,.5);animation:rise .3s ease both;height:100vh">
+
+        <div style="flex:none;padding:16px 26px 12px;border-bottom:2px solid rgba(237,230,218,.12);background:rgba(18,16,14,.94)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px">
+            <div style="font:700 14px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase">{{ stepLabel }}</div>
+            <button onClick="{{ h.closeWizard }}" style="width:34px;height:34px;border-radius:50%;border:2px solid rgba(237,230,218,.25);background:transparent;font-size:16px;color:var(--text);cursor:pointer" style-hover="background:rgba(237,230,218,.08)">✕</button>
+          </div>
+          <div style="margin-top:11px;height:8px;border-radius:999px;background:rgba(237,230,218,.12);overflow:hidden">
+            <div style="height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--hi));width:{{ progressPct }};transition:width .4s cubic-bezier(.22,1,.36,1)"></div>
+          </div>
+          <div style="font:500 12px 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:6px">{{ stepCounter }}</div>
+        </div>
+
+        <div style="flex:1;overflow-y:auto;padding:28px 26px 24px">
+
+          <!-- tournament -->
+          <sc-if value="{{ isTournament }}" hint-placeholder-val="{{ true }}">
+            <div style="animation:rise .3s ease both">
+              <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.qTournament }}</h2>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 22px">{{ t.qTournamentSub }}</p>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+                <sc-for list="{{ tournamentOptions }}" as="opt" hint-placeholder-count="3">
+                  <button onClick="{{ opt.onPick }}" style="{{ opt.cardStyle }}" style-hover="transform:translateY(-3px)">
+                    <div style="font:700 40px/.9 'Oswald',sans-serif">{{ opt.big }}</div>
+                    <div style="font:600 14px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-top:10px">{{ opt.title }}</div>
+                    <div style="font:400 13px/1.35 'Alegreya Sans',sans-serif;opacity:.8;margin-top:5px">{{ opt.desc }}</div>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- details -->
+          <sc-if value="{{ isDetails }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:rise .3s ease both">
+              <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.detailsTitle }}</h2>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 22px">{{ t.detailsSub }}</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <label style="display:flex;flex-direction:column;gap:6px;grid-column:1/-1">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fEmail }}</span>
+                  <input type="email" value="{{ personal.email }}" onInput="{{ h.onEmail }}" onBlur="{{ h.touchEmail }}" placeholder="name@email.com" style="{{ emailInputStyle }}" style-focus="border-color:var(--hi)">
+                  <sc-if value="{{ emailBad }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ errMsgStyle }}">{{ t.errEmail }}</span>
+                  </sc-if>
+                </label>
+                <label style="display:flex;flex-direction:column;gap:6px">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fFirst }}</span>
+                  <input value="{{ personal.firstName }}" onInput="{{ h.onFirst }}" onBlur="{{ h.touchFirst }}" style="{{ firstInputStyle }}" style-focus="border-color:var(--hi)">
+                  <sc-if value="{{ firstBad }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ errMsgStyle }}">{{ t.errFirst }}</span>
+                  </sc-if>
+                </label>
+                <label style="display:flex;flex-direction:column;gap:6px">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fLast }}</span>
+                  <input value="{{ personal.lastName }}" onInput="{{ h.onLast }}" onBlur="{{ h.touchLast }}" style="{{ lastInputStyle }}" style-focus="border-color:var(--hi)">
+                  <sc-if value="{{ lastBad }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ errMsgStyle }}">{{ t.errLast }}</span>
+                  </sc-if>
+                </label>
+                <label style="display:flex;flex-direction:column;gap:6px">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fMobile }}</span>
+                  <input type="tel" inputmode="numeric" maxlength="10" value="{{ personal.mobile }}" onInput="{{ h.onMobile }}" onBlur="{{ h.touchMobile }}" placeholder="69xxxxxxxx" style="{{ mobileInputStyle }}" style-focus="border-color:var(--hi)">
+                  <sc-if value="{{ mobileBad }}" hint-placeholder-val="{{ false }}">
+                    <span style="{{ errMsgStyle }}">{{ t.errMobile }}</span>
+                  </sc-if>
+                </label>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- team -->
+          <sc-if value="{{ isTeam }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:rise .3s ease both">
+              <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.teamTitle }}</h2>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 18px">{{ t.teamSub }}</p>
+
+              <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:14px;align-items:end;margin-bottom:16px">
+                <label style="display:flex;flex-direction:column;gap:6px">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.fTeamName }}</span>
+                  <input value="{{ team.name }}" onInput="{{ h.onTeamName }}" placeholder="{{ t.teamNamePh }}" style="border:2px solid rgba(237,230,218,.25);border-radius:12px;padding:13px 15px;font-size:16px;background:var(--surface-2);color:var(--text)" style-focus="border-color:var(--hi)">
+                </label>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.jerseyLabel }}</span>
+                  <div style="display:flex;gap:7px;flex-wrap:wrap">
+                    <sc-for list="{{ jerseyOptions }}" as="j" hint-placeholder-count="8">
+                      <button onClick="{{ j.onPick }}" title="{{ j.name }}" style="{{ j.swatchStyle }}"></button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ROSTER SQUAD CARDS -->
+              <div style="position:relative;border-radius:16px;background:radial-gradient(120% 140% at 50% 0%,var(--surface-2),var(--surface));border:2px solid var(--ink);box-shadow:inset 0 2px 0 rgba(237,230,218,.1);overflow:hidden;margin-bottom:6px;padding:20px 14px 16px">
+                <div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(237,230,218,.05) 0 2px,transparent 2px 34px);pointer-events:none"></div>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding:6px 6px 10px">
+                  <sc-for list="{{ roster }}" as="p" hint-placeholder-count="3">
+                    <div style="{{ p.cardWrapStyle }}">
+                      <div style="position:relative;width:150px;flex:none;background:var(--surface);border:3px solid var(--ink);border-radius:14px;padding:13px 10px 11px;box-shadow:0 7px 0 var(--ink);text-align:center">
+                        <!-- jersey -->
+                        <div style="position:relative;height:132px">
+                          <div style="position:absolute;left:50%;bottom:2px;transform:translateX(-50%);width:82px;height:8px;background:rgba(0,0,0,.5);border-radius:50%;filter:blur(.5px)"></div>
+                          <!-- centering wrapper: sway animates rotation only, so it cannot clobber the centering transform -->
+                          <div style="position:absolute;left:50%;top:0;transform:translateX(-50%);width:130px;height:124px">
+                            <div style="{{ p.jerseySwayStyle }}">
+                              <!-- sleeveless tank body: armholes are scooped out of the shoulders below -->
+                              <div style="position:absolute;left:50%;top:8px;transform:translateX(-50%);width:92px;height:106px;background:{{ p.hex }};border:2.5px solid var(--ink);border-radius:22px 22px 8px 8px;z-index:2;overflow:hidden">
+                                <!-- armhole scoops: card-coloured circles biting into each shoulder -->
+                                <div style="position:absolute;left:-19px;top:-9px;width:38px;height:52px;background:var(--surface);border-right:2.5px solid var(--ink);border-radius:50%;z-index:3"></div>
+                                <div style="position:absolute;right:-19px;top:-9px;width:38px;height:52px;background:var(--surface);border-left:2.5px solid var(--ink);border-radius:50%;z-index:3"></div>
+                                <!-- collar -->
+                                <div style="position:absolute;left:50%;top:-11px;transform:translateX(-50%);width:34px;height:19px;background:var(--surface);border:2.5px solid var(--ink);border-radius:0 0 15px 15px;z-index:4"></div>
+                                <!-- number -->
+                                <div style="position:absolute;left:0;right:0;top:50px;font:700 42px/1 'Oswald',sans-serif;color:{{ p.badgeFg }};text-align:center;letter-spacing:.02em;z-index:2">{{ p.number }}</div>
+                              </div>
+                              <!-- name: outside the body div, which clips its own fabric edge -->
+                              <div style="{{ p.jerseyNameStyle }}"><span style="{{ p.jerseyNameInnerStyle }}">{{ p.jerseyName }}</span></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div style="font:500 11px/1.3 'Alegreya Sans',sans-serif;font-style:italic;color:var(--accent-text);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.cardNick }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="text-align:center;font:600 10px 'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">{{ t.tapRotate }}</div>
+              </div>
+
+              <!-- compact player rows -->
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ roster }}" as="p" hint-placeholder-count="3">
+                  <div style="display:grid;grid-template-columns:26px 1.3fr 1fr auto;gap:9px;align-items:center;background:var(--surface);border:2px solid rgba(237,230,218,.16);border-radius:12px;padding:8px 10px">
+                    <div style="width:22px;height:22px;border-radius:50%;background:{{ p.hex }};border:2px solid var(--ink);font:700 11px/18px 'Oswald',sans-serif;text-align:center;color:{{ p.badgeFg }}">{{ p.number }}</div>
+                    <sc-if value="{{ p.editable }}" hint-placeholder-val="{{ true }}">
+                      <input value="{{ p.name }}" onInput="{{ p.onName }}" placeholder="{{ p.namePh }}" style="border:none;border-bottom:2px solid rgba(237,230,218,.18);background:transparent;padding:7px 2px;font-size:15px;color:var(--text);min-width:0" style-focus="border-color:var(--hi)">
+                    </sc-if>
+                    <sc-if value="{{ p.readonlyName }}" hint-placeholder-val="{{ false }}">
+                      <div style="font:600 15px 'Alegreya Sans',sans-serif;padding:7px 2px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }} <span style="font:600 10px 'Oswald',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-text)">· {{ t.captainTag }}</span></div>
+                    </sc-if>
+                    <input value="{{ p.nick }}" onInput="{{ p.onNick }}" placeholder="{{ t.nickPh }}" style="border:none;border-bottom:2px solid rgba(237,230,218,.18);background:transparent;padding:7px 2px;font-size:14px;color:var(--accent-text);min-width:0;font-style:italic" style-focus="border-color:var(--hi)">
+                    <sc-if value="{{ p.removable }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ p.onRemove }}" style="width:28px;height:28px;border-radius:50%;border:2px solid rgba(237,230,218,.2);background:transparent;color:var(--accent-text);font-size:15px;cursor:pointer" style-hover="background:rgba(224,120,76,.14)">✕</button>
+                    </sc-if>
+                    <sc-if value="{{ p.notRemovable }}" hint-placeholder-val="{{ true }}">
+                      <div style="width:28px"></div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ canAddSub }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ h.addSub }}" style="display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed rgba(237,230,218,.28);background:transparent;border-radius:12px;padding:11px;font:600 13px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer" style-hover="border-color:var(--accent-text);color:var(--accent-text)">
+                    <span style="font-size:18px;line-height:1">＋</span> {{ t.addSub }}
+                  </button>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- 1v1 nickname -->
+          <sc-if value="{{ isNickname }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:rise .3s ease both">
+              <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.nickTitle }}</h2>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 22px">{{ t.nickSub }}</p>
+              <div style="background:var(--surface);border:2px solid var(--ink);border-radius:16px;padding:22px;box-shadow:0 8px 0 rgba(0,0,0,.3);margin-bottom:20px">
+                <div style="font:600 11px 'Oswald',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--hi);text-align:center">{{ t.scoreboardName }}</div>
+                <div style="font:700 clamp(30px,6vw,52px)/1 'Oswald',sans-serif;text-transform:uppercase;color:var(--text);text-align:center;margin-top:8px;letter-spacing:.04em;min-height:1em;word-break:break-word">{{ solo.preview }}</div>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font:600 12px 'Oswald',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">{{ t.nickFieldLabel }}</span>
+                <input value="{{ solo.nickname }}" onInput="{{ h.onSolo }}" maxlength="14" placeholder="MVP" style="border:2px solid rgba(237,230,218,.25);border-radius:12px;padding:14px 16px;font:600 18px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;background:var(--surface-2);color:var(--text)" style-focus="border-color:var(--hi)">
+                <span style="font:400 13px/1.4 'Alegreya Sans',sans-serif;color:var(--muted);font-style:italic">{{ t.nickHelp }}</span>
+              </label>
+            </div>
+          </sc-if>
+
+          <!-- terms -->
+          <sc-if value="{{ isTerms }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:rise .3s ease both">
+              <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.termsTitle }}</h2>
+              <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 20px">{{ t.termsSub }}</p>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ terms }}" as="tm" hint-placeholder-count="4">
+                  <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--surface);border:2px solid rgba(237,230,218,.14);border-radius:14px;padding:15px 17px">
+                    <div style="width:34px;height:34px;border-radius:50%;background:rgba(196,86,46,.14);border:2px solid var(--accent-text);color:var(--accent-text);font:700 15px/30px 'Oswald',sans-serif;text-align:center">{{ tm.n }}</div>
+                    <div>
+                      <div style="font:600 15px 'Oswald',sans-serif;letter-spacing:.03em;text-transform:uppercase">{{ tm.title }}</div>
+                      <div style="font:400 14px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:4px">{{ tm.body }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <button onClick="{{ h.toggleAllIs15 }}" style="{{ self15Style }}">
+                <span style="{{ self15BoxStyle }}">{{ self15Check }}</span>
+                <span>{{ t.age15 }}</span>
+              </button>
+              <button onClick="{{ h.toggleAccept }}" style="{{ acceptStyle }}">
+                <span style="{{ acceptBoxStyle }}">{{ acceptCheck }}</span>
+                <span>{{ t.acceptLabel }}</span>
+              </button>
+            </div>
+          </sc-if>
+
+          <!-- review / submitting / success -->
+          <sc-if value="{{ isReview }}" hint-placeholder-val="{{ false }}">
+            <div style="animation:rise .3s ease both">
+              <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
+                <div>
+                  <h2 style="font:700 30px/1 'Oswald',sans-serif;text-transform:uppercase;margin:0">{{ t.reviewTitle }}</h2>
+                  <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);margin:8px 0 20px">{{ t.reviewSub }}</p>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <sc-for list="{{ summary }}" as="s" hint-placeholder-count="4">
+                      <div style="display:grid;grid-template-columns:150px 1fr;gap:12px;padding:12px 16px;background:var(--surface);border:2px solid rgba(237,230,218,.14);border-radius:12px">
+                        <div style="font:600 12px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-text)">{{ s.k }}</div>
+                        <div style="font:500 15px 'Alegreya Sans',sans-serif;color:var(--text)">{{ s.v }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ submitError }}" hint-placeholder-val="{{ false }}">
+                    <div style="margin-top:14px;padding:12px 16px;background:rgba(224,120,76,.12);border:2px solid var(--accent-text);border-radius:12px;font:500 14px 'Alegreya Sans',sans-serif;color:var(--accent-text)">{{ submitError }}</div>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+                <div style="text-align:center;padding:30px 0;animation:pop .4s ease both">
+                  <div style="width:96px;height:96px;margin:0 auto;border-radius:50%;background:var(--accent);border:5px solid var(--ink);box-shadow:0 8px 0 var(--ink);position:relative">
+                    <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--ink);transform:translateX(-50%)"></div>
+                    <div style="position:absolute;left:0;right:0;top:50%;height:3px;background:var(--ink);transform:translateY(-50%)"></div>
+                  </div>
+                  <h2 style="font:700 34px/1 'Oswald',sans-serif;text-transform:uppercase;margin:24px 0 0">{{ t.successTitle }}</h2>
+                  <p style="font:400 17px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);max-width:26em;margin:12px auto 0">{{ t.successBody }}</p>
+                  <p style="font:500 14px 'Alegreya Sans',sans-serif;color:var(--muted);margin-top:14px">{{ t.successNote }}</p>
+                  <button onClick="{{ h.closeWizard }}" style="margin-top:24px;background:var(--surface);color:var(--text);border:none;border-radius:999px;padding:14px 30px;font:700 15px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 5px 0 var(--ink)">{{ t.done }}</button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+        </div>
+
+        <!-- footer nav -->
+        <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 26px;border-top:2px solid rgba(237,230,218,.12);background:rgba(18,16,14,.94)">
+            <button onClick="{{ h.prev }}" style="{{ backStyle }}">‹ {{ t.back }}</button>
+            <button onClick="{{ h.next }}" style="{{ nextStyle }}">{{ nextLabel }}</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1120,&quot;height&quot;:760},&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gr&quot;,&quot;en&quot;],&quot;default&quot;:&quot;en&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  // ── set this after deploying your Apps Script (see chat) ──
+  SCRIPT_URL = "";
+
+  constructor(props){
+    super(props);
+    this.state = {
+      lang: (props.lang === 'gr' ? 'gr' : 'en'),
+      wizardOpen: false,
+      stepIndex: 0,
+      tournament: '',              // '3on3' | '1v1' | 'both'
+      personal: { email:'', firstName:'', lastName:'', mobile:'' },
+      touched: { email:false, firstName:false, lastName:false, mobile:false },
+      team: { name:'', jersey:'', jerseyKey:'',
+              players:[ {name:'',nick:''}, {name:'',nick:''} ] },
+      captainNick: '',
+      solo: { nickname:'' },
+      everyoneIs15: false,
+      accepted: false,
+      submitting: false,
+      submitted: false,
+      submitError: '',
+    };
+  }
+
+  // strip accents (τόνος) — Greek all-caps convention drops them
+  deTonos(s){ return (s==null?'':(''+s)).normalize('NFD').replace(/[\u0300-\u0362]/g,'').normalize('NFC'); }
+
+  // real rendered width of a string — Oswald glyphs range .32em–.72em, so character
+  // counts cannot predict how wide a surname sits on the jersey back
+  measureText(str,font){
+    if(typeof document==='undefined') return (str||'').length*6;
+    this._mctx = this._mctx || (document.createElement('canvas').getContext('2d'));
+    if(!this._mctx) return (str||'').length*6;
+    this._mctx.font=font;
+    return this._mctx.measureText(str||'').width;
+  }
+
+  // ── i18n ──
+  T(){
+    const en = {
+      headFont:"'Bangers','Oswald',sans-serif",
+      brand:'Chalandri Basketball Cup', brandSub:'Asia Minor Refugees Assoc. of Chalandri — Roots',
+      register:'Register', langLabel:'EN', otherLang:'ΕΛ',
+      heroLine1:'The neighbourhood', heroLine2:'plays ball',
+      heroBody:'The first street-basketball tournament at the Chalandri Settlement. Grab two friends, pick your colours and claim the court — or go solo in the 1v1.',
+      heroCta:'Register your team',
+      freeChip:'Free entry', prizeChip:'Prizes for the winners',
+      heritageCaption:'Asia Minor · Roots',
+      infoWhen:'When', dateBig:'Sat 26 & Sun 27 Sep', dateSub:'Two days of games, all weekend',
+      infoWhere:'Where', placeBig:'Chalandri Settlement', placeSub:'Mikras Asias & Aigaiou St.',
+      infoCost:'Cost', costBig:'Free', costSub:'No entry fee — just show up and play',
+      infoFormat:'Format', formatBig:'3on3 / 1v1',
+      soon:'Coming soon', scheduleTitle:'Schedule & bracket', scheduleBody:'Match times, group draw and the tournament bracket will be announced here once registrations close.',
+      chipBracket:'Bracket', chipTeams:'Teams', chipTimes:'Match times',
+      footerNote:'Made with love for the neighbourhood',
+      qTournament:'Which tournament?', qTournamentSub:'Pick where you want to play. You can do both.',
+      to3title:'Team play', to3desc:'3 on 3, with an optional sub',
+      to1title:'Solo', to1desc:'One-on-one showdown', tobtitle:'Both', tobdesc:'Team + solo',
+      detailsTitle:'Your details', detailsSub:'The team captain / player contact.',
+      fEmail:'Email', fFirst:'First name', fLast:'Last name', fMobile:'Mobile',
+      errEmail:'Enter a valid email address.', errFirst:'Enter your first name.', errLast:'Enter your last name.',
+      errMobile:'Enter a valid mobile number — 10 digits, starting with 69 (e.g. 69xxxxxxxx).',
+      age15:'Everyone on the team is 15 or older',
+      teamTitle:'Build your team', teamSub:'Name it, pick the jersey colour, add your crew. Nicknames show on the scoreboard.',
+      fTeamName:'Team name', teamNamePh:'e.g. The Roots', teamNamePhReal:'e.g. The Roots', jerseyLabel:'Jersey colour',
+      captainTag:'Captain', nickPh:'nickname (optional)', addSub:'Add substitute',
+      tapRotate:'your squad kit',
+      nickTitle:'Your 1v1 name', nickSub:'This is the name shown on the scoreboard for your solo games.',
+      scoreboardName:'On the board', nickFieldLabel:'Nickname', nickHelp:'Leave it as your name, or go with something legendary. Type “-” if you’d rather skip the 1v1.',
+      termsTitle:'Terms of entry', termsSub:'By submitting you declare that:',
+      t1t:'Health', t1b:'All players are fully fit and have no medical condition preventing intense athletic activity.',
+      t2t:'Own responsibility', t2b:'We take part entirely at our own responsibility (or a guardian’s, for minors).',
+      t3t:'Liability waiver', t3b:'The Association and organisers bear no responsibility for injuries, losses or damage to personal items during the games.',
+      t4t:'Media use', t4b:'We consent to photo/video coverage of the games for the Association’s promotion of the event.',
+      acceptLabel:'I have read and fully accept the terms above.',
+      reviewTitle:'Review & submit', reviewSub:'Check everything looks right, then send it in.',
+      submit:'Submit registration', submitting:'Sending…',
+      successTitle:'You’re in!', successBody:'Your registration has been received. See you on the court at the Chalandri Settlement.',
+      successNote:'A confirmation will follow by email.', done:'Done',
+      back:'Back', next:'Continue',
+      sumTournament:'Tournament', sumName:'Name', sumEmail:'Email', sumMobile:'Mobile',
+      sumTeam:'Team', sumJersey:'Jersey', sumRoster:'Roster', sumNick:'1v1 name',
+    };
+    const gr = {
+      // Sofia Sans XC ships real Greek glyphs (Bangers is Latin-only); w900 to hold weight next to Bangers
+      headFont:"'Sofia Sans Extra Condensed','Oswald',sans-serif",
+      brand:'Κύπελλο Μπάσκετ Χαλανδρίου', brandSub:'Σύνδεσμος Μικρασιατών Χαλανδρίου — Ρίζες',
+      register:'Εγγραφή', langLabel:'ΕΛ', otherLang:'EN',
+      heroLine1:'Συνοικιακό', heroLine2:'μπασκετάκι',
+      heroBody:'Το πρώτο τουρνουά της γειτονιάς, στον Συνοικισμό Χαλανδρίου. Πάρε δύο φίλους, διάλεξε χρώματα και κατέβα στο γήπεδο — ή παίξε μόνος σου στο 1v1.',
+      heroCta:'Δήλωσε την ομάδα σου',
+      freeChip:'Δωρεάν συμμετοχή', prizeChip:'Έπαθλα για τους νικητές',
+      heritageCaption:'Μικρά Ασία · Ρίζες',
+      infoWhen:'Πότε', dateBig:'Σάβ 26 & Κυρ 27 Σεπ', dateSub:'Δύο μέρες αγώνων, όλο το Σαββατοκύριακο',
+      infoWhere:'Πού', placeBig:'Συνοικισμός Χαλανδρίου', placeSub:'Μικράς Ασίας & Αιγαίου',
+      infoCost:'Κόστος', costBig:'Δωρεάν', costSub:'Χωρίς κόστος συμμετοχής — έλα και παίξε',
+      infoFormat:'Μορφή', formatBig:'3ον3 / 1v1',
+      soon:'Σύντομα', scheduleTitle:'Πρόγραμμα & ταμπλό', scheduleBody:'Οι ώρες των αγώνων, η κλήρωση των ομίλων και το ταμπλό του τουρνουά θα ανακοινωθούν εδώ μόλις κλείσουν οι εγγραφές.',
+      chipBracket:'Ταμπλό', chipTeams:'Ομάδες', chipTimes:'Ώρες αγώνων',
+      footerNote:'Φτιαγμένο με αγάπη για τη γειτονιά',
+      qTournament:'Σε ποιο τουρνουά;', qTournamentSub:'Διάλεξε πού θέλεις να παίξεις. Μπορείς και στα δύο.',
+      to3title:'Ομαδικό', to3desc:'3 εναντίον 3, με προαιρετικό αναπληρωματικό',
+      to1title:'Ατομικό', to1desc:'Μονομαχία ένας εναντίον ενός', tobtitle:'Και τα δύο', tobdesc:'Ομαδικό + ατομικό',
+      detailsTitle:'Τα στοιχεία σου', detailsSub:'Η επικοινωνία του αρχηγού / παίκτη.',
+      fEmail:'Email', fFirst:'Όνομα', fLast:'Επώνυμο', fMobile:'Κινητό',
+      errEmail:'Συμπλήρωσε ένα έγκυρο email.', errFirst:'Συμπλήρωσε το όνομά σου.', errLast:'Συμπλήρωσε το επώνυμό σου.',
+      errMobile:'Συμπλήρωσε έγκυρο κινητό — 10 ψηφία, ξεκινώντας από 69 (π.χ. 69xxxxxxxx).',
+      age15:'Όλα τα μέλη της ομάδας είναι 15 ετών ή μεγαλύτερα',
+      teamTitle:'Φτιάξε την ομάδα σου', teamSub:'Δώσε όνομα, διάλεξε χρώμα φανέλας, πρόσθεσε την παρέα. Τα ψευδώνυμα εμφανίζονται στο ταμπλό.',
+      fTeamName:'Όνομα ομάδας', teamNamePh:'π.χ. Οι Ρίζες', jerseyLabel:'Χρώμα φανέλας',
+      captainTag:'Αρχηγός', nickPh:'ψευδώνυμο (προαιρετικό)', addSub:'Προσθήκη αναπληρωματικού',
+      tapRotate:'οι φανέλες της ομάδας σου',
+      nickTitle:'Το όνομά σου στο 1v1', nickSub:'Αυτό είναι το όνομα που θα εμφανίζεται στο ταμπλό για τους ατομικούς σου αγώνες.',
+      scoreboardName:'Στο ταμπλό', nickFieldLabel:'Ψευδώνυμο', nickHelp:'Άφησέ το όπως το όνομά σου ή διάλεξε κάτι θρυλικό. Γράψε «-» αν δεν θες να παίξεις στο 1v1.',
+      termsTitle:'Όροι συμμετοχής', termsSub:'Με την υποβολή δηλώνω υπεύθυνα ότι:',
+      t1t:'Κατάσταση υγείας', t1b:'Όλοι οι παίκτες είμαστε πλήρως υγιείς και δεν έχουμε ιατρικό πρόβλημα που να μας εμποδίζει σε έντονη αθλητική δραστηριότητα.',
+      t2t:'Ατομική ευθύνη', t2b:'Συμμετέχουμε αποκλειστικά με δική μας ευθύνη (ή των κηδεμόνων μας, εφόσον είμαστε ανήλικοι).',
+      t3t:'Αποποίηση ευθύνης', t3b:'Ο Σύνδεσμος και οι διοργανωτές δεν φέρουν ευθύνη για τραυματισμούς, απώλειες ή φθορές προσωπικών αντικειμένων κατά τους αγώνες.',
+      t4t:'Χρήση υλικού', t4b:'Συναινούμε στη φωτογραφική/βιντεοσκοπημένη κάλυψη των αγώνων για την προβολή της εκδήλωσης από τον Σύνδεσμο.',
+      acceptLabel:'Έχω διαβάσει, κατανοώ και αποδέχομαι πλήρως τους παραπάνω όρους.',
+      reviewTitle:'Έλεγχος & υποβολή', reviewSub:'Δες ότι όλα είναι σωστά και στείλε την εγγραφή.',
+      submit:'Υποβολή εγγραφής', submitting:'Αποστολή…',
+      successTitle:'Είσαι μέσα!', successBody:'Η εγγραφή σου καταχωρήθηκε. Τα λέμε στο γήπεδο, στον Συνοικισμό Χαλανδρίου.',
+      successNote:'Θα ακολουθήσει επιβεβαίωση με email.', done:'Τέλος',
+      back:'Πίσω', next:'Συνέχεια',
+      sumTournament:'Τουρνουά', sumName:'Ονοματεπώνυμο', sumEmail:'Email', sumMobile:'Κινητό',
+      sumTeam:'Ομάδα', sumJersey:'Φανέλα', sumRoster:'Σύνθεση', sumNick:'Όνομα 1v1',
+    };
+    if(this.state.lang==='en') return en;
+    const BODY=new Set(['brandSub','heroBody','dateSub','placeSub','costSub','scheduleBody','footerNote','qTournamentSub','to3desc','to1desc','tobdesc','detailsSub','teamSub','teamNamePh','nickPh','nickSub','nickHelp','termsSub','t1b','t2b','t3b','t4b','acceptLabel','reviewSub','successBody','successNote','errEmail','errFirst','errLast','errMobile']);
+    const out={}; for(const k in gr){ out[k]= BODY.has(k)? gr[k] : this.deTonos(gr[k]); } return out;
+  }
+
+  jerseyList(){
+    const gr = this.state.lang==='gr';
+    return [
+      {key:'black', hex:'#1c1c1c', name: gr?'Μαύρο':'Black'},
+      {key:'white', hex:'#f4efe6', name: gr?'Άσπρο':'White'},
+      {key:'blue',  hex:'#2f5fa8', name: gr?'Μπλε':'Blue'},
+      {key:'green', hex:'#2f7d4f', name: gr?'Πράσινο':'Green'},
+      {key:'red',   hex:'#c0392b', name: gr?'Κόκκινο':'Red'},
+      {key:'yellow',hex:'#e6b422', name: gr?'Κίτρινο':'Yellow'},
+      {key:'purple',hex:'#7a4fa0', name: gr?'Μωβ':'Purple'},
+      {key:'orange',hex:'#d97a2b', name: gr?'Πορτοκαλί':'Orange'},
+    ];
+  }
+
+  steps(){
+    const s = ['tournament','details'];
+    const t = this.state.tournament;
+    if (t==='3on3'||t==='both') s.push('team');
+    if (t==='1v1'||t==='both') s.push('nickname');
+    s.push('terms','review');
+    return s;
+  }
+  curKey(){ const s=this.steps(); return s[Math.min(this.state.stepIndex, s.length-1)]; }
+
+  // ── mutations ──
+  up(patch){ this.setState(patch); }
+  setPersonal(k,v){ this.setState(s=>({personal:{...s.personal,[k]:v}})); }
+  touch(field){ this.setState(s=>({touched:{...s.touched,[field]:true}})); }
+  setTeam(k,v){ this.setState(s=>({team:{...s.team,[k]:v}})); }
+  setPlayer(i,k,v){ this.setState(s=>{ const p=s.team.players.slice(); p[i]={...p[i],[k]:v}; return {team:{...s.team,players:p}}; }); }
+
+  validEmail(v){ return /^\S+@\S+\.\S+$/.test((v||'').trim()); }
+  validMobile(v){ return /^69\d{8}$/.test((v||'').replace(/\s+/g,'')); }
+
+  canProceed(){
+    const st=this.state, key=this.curKey();
+    if(key==='tournament') return !!st.tournament;
+    if(key==='details'){ const p=st.personal; return this.validEmail(p.email) && p.firstName.trim() && p.lastName.trim() && this.validMobile(p.mobile); }
+    if(key==='team'){
+      if(!st.team.name.trim()) return false;
+      if(!st.team.jerseyKey) return false;
+      const req=st.team.players.slice(0,2);
+      if(!req.every(p=>p.name.trim())) return false;
+      const sub=st.team.players[2];
+      if(sub && !sub.name.trim()) return false;
+      return true;
+    }
+    if(key==='nickname') return !!st.solo.nickname.trim();
+    if(key==='terms') return st.everyoneIs15 && st.accepted;
+    if(key==='review') return true;
+    return true;
+  }
+
+  next(){
+    if(this.curKey()==='review'){ this.submit(); return; }
+    if(!this.canProceed()){
+      if(this.curKey()==='details') this.setState(s=>({touched:{email:true,firstName:true,lastName:true,mobile:true}}));
+      return;
+    }
+    this.setState(s=>({stepIndex: Math.min(s.stepIndex+1, this.steps().length-1)}));
+  }
+  prev(){
+    if(this.state.stepIndex===0){ this.setState({wizardOpen:false}); return; }
+    this.setState(s=>({stepIndex: s.stepIndex-1}));
+  }
+
+  buildPayload(){
+    const st=this.state, jl=this.jerseyList().find(j=>j.key===st.team.jerseyKey);
+    const roster=[{name:`${st.personal.firstName} ${st.personal.lastName}`.trim(), nick:st.captainNick, role:'captain'},
+      ...st.team.players.map((p,i)=>({name:p.name,nick:p.nick,role:i<2?'player':'sub'}))];
+    return {
+      tournament: st.tournament, email: st.personal.email,
+      firstName: st.personal.firstName, lastName: st.personal.lastName, mobile: st.personal.mobile,
+      teamName: st.team.name, jersey: jl?jl.name:st.team.jersey,
+      roster: JSON.stringify(roster), soloNickname: st.solo.nickname,
+      everyoneIs15: st.everyoneIs15,
+      accepted: st.accepted, submittedAt: new Date().toISOString(),
+    };
+  }
+
+  submit(){
+    if(this.state.submitting) return;
+    this.setState({submitting:true, submitError:''});
+    const payload=this.buildPayload();
+    const done=()=>this.setState({submitting:false, submitted:true});
+    if(!this.SCRIPT_URL){ setTimeout(done, 900); return; }
+    const body=new URLSearchParams(payload);
+    fetch(this.SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body})
+      .then(done).catch(()=>done()); // no-cors is opaque; assume success
+  }
+
+  renderVals(){
+    const st=this.state, t=this.T(), gr=st.lang==='gr';
+    const key=this.curKey(), steps=this.steps();
+    const idx=Math.min(st.stepIndex, steps.length-1);
+    const jl=this.jerseyList();
+    const noJersey=!st.team.jerseyKey;
+    const hex=st.team.jersey||'#6E655A';
+
+    // tournament option cards
+    const optDef=[
+      {id:'3on3', big:'3v3', title:t.to3title, desc:t.to3desc},
+      {id:'1v1', big:'1v1', title:t.to1title, desc:t.to1desc},
+      {id:'both', big:'∞', title:t.tobtitle, desc:t.tobdesc},
+    ];
+    const tournamentOptions=optDef.map(o=>{
+      const sel=st.tournament===o.id;
+      return {...o, onPick:()=>this.setState({tournament:o.id}),
+        cardStyle:`display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;padding:20px 18px;border-radius:16px;cursor:pointer;transition:transform .15s;font-family:'Alegreya Sans',sans-serif;`+
+          (sel? 'background:var(--accent);color:var(--on-accent);border:3px solid var(--ink);box-shadow:0 6px 0 var(--ink);'
+              : 'background:var(--surface);color:var(--text);border:3px solid rgba(237,230,218,.18);box-shadow:0 4px 0 var(--ink);')};
+    });
+
+    const jerseyOptions=jl.map(j=>{
+      const sel=st.team.jerseyKey===j.key;
+      return {...j, onPick:()=>this.setState(s=>({team:{...s.team,jersey:j.hex,jerseyKey:j.key}})),
+        swatchStyle:`width:30px;height:30px;border-radius:9px;background:${j.hex};cursor:pointer;transition:transform .12s;`+
+          (sel? 'border:3px solid var(--ink);box-shadow:0 0 0 3px var(--hi);transform:scale(1.08);':'border:2px solid rgba(237,230,218,.35);')};
+    });
+
+    // roster (captain + players) — used for carousel and rows
+    const captainName=`${st.personal.firstName} ${st.personal.lastName}`.trim();
+    const readable = c => (parseInt(c.slice(1,3),16)*0.299+parseInt(c.slice(3,5),16)*0.587+parseInt(c.slice(5,7),16)*0.114) > 150;
+    const badgeFg = readable(hex)?'#12100E':'#EDE6DA';
+    const D=(s)=>gr?this.deTonos(s):s;
+    const rawRoster=[
+      {kind:'captain', name:captainName||D('Αρχηγός'), nick:st.captainNick,
+        role:D(gr?'Αρχηγός':'Captain'), editable:false, removable:false},
+      ...st.team.players.map((p,i)=>({kind:'player', idx:i, name:p.name, nick:p.nick,
+        role: D(i<2?(gr?'Παίκτης':'Player'):(gr?'Αναπλ.':'Sub')), editable:true, removable:i>=2})),
+    ];
+    const roster=rawRoster.map((p,i)=>{
+      const cardName=(p.name&&p.name.trim())?p.name.trim():D(gr?`Παίκτης ${i+1}`:`Player ${i+1}`);
+      const display=(p.nick&&p.nick.trim())?p.nick.trim():cardName;
+      const cardNick=(p.nick&&p.nick.trim())?p.nick.trim():'—';
+      const tilt=(i%2===0? -3:3);
+      // surname on the jersey back, mirroring the input as it is typed
+      const typed=(p.name||'').trim();
+      const jerseyName=D((typed? (typed.split(/\s+/).pop()||typed) : (gr?'ΟΝΟΜΑ':'NAME')).toUpperCase());
+      const nameFaded=!typed;
+      // Fit the surname into NAME_W, the clear chest between the armhole scoops. Oswald
+      // glyphs run .32em (I) to .72em (M), so character counts cannot predict width —
+      // measure the real string. Font-size does the shrinking; scaleX only takes up the
+      // last sliver, since below ~.72 condensed lettering turns to mush.
+      const NAME_W=58, NAME_MAX=11, NAME_MIN=7.5, SQUISH_MIN=0.72;
+      const trackEm=jerseyName.length>10?0.02:0.05;
+      const widthAt=(px)=>this.measureText(jerseyName,`700 ${px}px 'Oswald', sans-serif`)
+                          + jerseyName.length*px*trackEm;
+      let nameFont=NAME_MAX;
+      const w0=widthAt(NAME_MAX);
+      if(w0>NAME_W) nameFont=Math.max(NAME_MIN, +(NAME_MAX*NAME_W/w0).toFixed(2));
+      const nameTrack=trackEm+'em';
+      const wf=widthAt(nameFont);
+      const nameSquish=(wf>NAME_W? Math.max(SQUISH_MIN, NAME_W/wf) : 1).toFixed(3);
+      // even at the floor a huge surname can still overrun; clip that last bit at the
+      // chest edge rather than letting ink run onto the armholes
+      const nameClip = wf*nameSquish > NAME_W+0.5;
+      return {
+        ...p, number:i+1, hex, badgeFg, badgeBg:hex,
+        display, role:p.role, cardName, cardNick,
+        namePh: gr?`Ονοματεπώνυμο`:`Full name`,
+        readonlyName: !p.editable,
+        notRemovable: !p.removable,
+        cardWrapStyle:`--tilt:${tilt*0.5}deg;animation:cardFloat ${3.2+i*0.35}s ease-in-out infinite;animation-delay:-${i*0.4}s`,
+        jerseySwayStyle:`position:absolute;inset:0;transform-origin:50% 6%;animation:jerseySway ${3.6+i*0.3}s ease-in-out infinite;animation-delay:-${i*0.5}s`,
+        // Name sits above the number, spanning the full chest between the armhole scoops.
+        // Long Greek surnames get a condensed transform rather than a tiny font, so the
+        // back stays readable at 9px+ instead of shrinking into illegibility.
+        // overflow stays visible: the span is laid out at natural width and scaleX'd down
+        // to fit, so an extreme surname condenses rather than getting chopped
+        jerseyNameStyle:`position:absolute;left:50%;top:42px;transform:translateX(-50%);width:58px;height:12px;z-index:5;opacity:${nameFaded?'.42':'1'};display:flex;align-items:center;justify-content:center;overflow:${nameClip?'hidden':'visible'}`,
+        jerseyNameInnerStyle:`flex:none;font:700 ${nameFont}px/1 'Oswald',sans-serif;letter-spacing:${nameTrack};text-transform:uppercase;color:${badgeFg};white-space:nowrap;transform:scaleX(${nameSquish});transform-origin:50% 50%`,
+        jerseyName,
+        onName: p.editable? (e)=>this.setPlayer(p.idx,'name',e.target.value):(()=>{}),
+        onNick: p.kind==='captain'? (e)=>this.setState({captainNick:e.target.value}) : (e)=>this.setPlayer(p.idx,'nick',e.target.value),
+        onRemove: p.removable? ()=>this.setState(s=>({team:{...s.team,players:s.team.players.slice(0,p.idx)}})):(()=>{}),
+      };
+    });
+
+    const self15 = st.everyoneIs15;
+    const acceptOn = st.accepted;
+
+    // 1v1 preview
+    const soloPreview=(st.solo.nickname&&st.solo.nickname.trim())?st.solo.nickname.trim():(gr?'ΤΟ ΟΝΟΜΑ ΣΟΥ':'YOUR NAME');
+
+    // summary
+    const tourMap={'3on3':t.to3title,'1v1':t.to1title,'both':t.tobtitle};
+    const jName=(jl.find(j=>j.key===st.team.jerseyKey)||{}).name||'';
+    const rosterStr=rawRoster.map(p=>{const nm=p.name||(gr?'—':'—'); return p.nick?`${nm} “${p.nick}”`:nm;}).join(' · ');
+    const summary=[
+      {k:t.sumTournament, v:tourMap[st.tournament]||'—'},
+      {k:t.sumName, v:captainName||'—'},
+      {k:t.sumEmail, v:st.personal.email||'—'},
+      {k:t.sumMobile, v:st.personal.mobile||'—'},
+    ];
+    if(st.tournament==='3on3'||st.tournament==='both'){
+      summary.push({k:t.sumTeam, v:st.team.name||'—'},{k:t.sumJersey, v:jName},{k:t.sumRoster, v:rosterStr});
+    }
+    if(st.tournament==='1v1'||st.tournament==='both'){
+      summary.push({k:t.sumNick, v:st.solo.nickname||'—'});
+    }
+
+    const terms=[
+      {n:'1',title:t.t1t,body:t.t1b},{n:'2',title:t.t2t,body:t.t2b},
+      {n:'3',title:t.t3t,body:t.t3b},{n:'4',title:t.t4t,body:t.t4b},
+    ];
+
+    const stepNames={tournament:D(gr?'Τουρνουά':'Tournament'),details:D(gr?'Στοιχεία':'Details'),team:D(gr?'Ομάδα':'Team'),nickname:'1v1',terms:D(gr?'Όροι':'Terms'),review:D(gr?'Υποβολή':'Submit')};
+    const canGo=this.canProceed();
+
+    // field-level validation (details step)
+    const tc=st.touched, p=st.personal;
+    const emailBad = tc.email && !this.validEmail(p.email);
+    const firstBad = tc.firstName && !p.firstName.trim();
+    const lastBad = tc.lastName && !p.lastName.trim();
+    const mobileBad = tc.mobile && !this.validMobile(p.mobile);
+    const errInputStyle="border:2px solid rgba(237,230,218,.25);border-radius:12px;padding:13px 15px;font-size:16px;background:var(--surface-2);color:var(--text);";
+    const badInputStyle="border:2px solid var(--accent-text);border-radius:12px;padding:13px 15px;font-size:16px;background:rgba(224,120,76,.1);color:var(--text);";
+    const errMsgStyle="font:500 12px/1.4 'Alegreya Sans',sans-serif;color:var(--accent-text);margin-top:1px";
+
+    // headline font — Bangers (EN, Latin-only) / Sofia Sans XC (GR, has Greek glyphs).
+    // Bangers has one weight and ignores the number; GR is variable, so push it heavy to match Bangers' presence.
+    const headW = gr?900:700;
+    // Greek drops tonos in all-caps (ΣΥΝΟΙΚΙΑΚΌ -> ΣΥΝΟΙΚΙΑΚΟ). CSS uppercase keeps the accent, so strip it here.
+    const caps = s => (s||'').toUpperCase()
+      .replace(/[ΆΈΉΊΌΎΏ]/g, c => 'ΆΈΉΊΌΎΏ'.indexOf(c)>=0 ? 'ΑΕΗΙΟΥΩ'['ΆΈΉΊΌΎΏ'.indexOf(c)] : c)
+      .replace(/Ϊ/g,'Ι').replace(/Ϋ/g,'Υ');
+    const brandFontStyle=`font:${headW} 15px/1 ${t.headFont};letter-spacing:.04em;text-transform:uppercase`;
+    const heroH1Style=`font:${gr?1000:700} clamp(${gr?'40px,6.2vw,80px':'44px,7vw,90px'})/.9 ${t.headFont};letter-spacing:${gr?'-.005em':'.02em'};margin:18px 0 0`;
+    const formatBigStyle=`position:relative;font:${gr?1000:900} clamp(34px,5vw,54px)/1 ${t.headFont};text-transform:uppercase;margin-top:10px;color:var(--text);letter-spacing:${gr?'.01em':'.03em'}`;
+    // shrink letter runs (on/v/ον) relative to the digits so "3on3 / 1v1" reads number-forward
+    const fbSegs=(t.formatBig||'').split(/([0-9]+|[^0-9]+)/).filter(Boolean);
+    const [fb1,fb2,fb3,fb4,fb5,fb6,fb7]=fbSegs;
+
+    const nextBase="border:none;border-radius:999px;padding:13px 30px;font:700 15px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;transition:transform .12s;";
+    return {
+      t, langLabel:t.otherLang,
+      brandFontStyle, heroH1Style, formatBigStyle,
+      heroLine1Caps:caps(t.heroLine1), heroLine2Caps:caps(t.heroLine2),
+      fb1, fb2, fb3, fb4, fb5, fb6, fb7,
+      wizardOpen:st.wizardOpen,
+      // steps flags
+      isTournament:key==='tournament', isDetails:key==='details', isTeam:key==='team',
+      isNickname:key==='nickname', isTerms:key==='terms', isReview:key==='review',
+      notSubmitted:!st.submitted, submitted:st.submitted, submitError:st.submitError,
+      showNav: !st.submitted,
+      stepLabel: stepNames[key]||'', stepCounter:`${gr?'Βήμα':'Step'} ${idx+1}/${steps.length}`,
+      progressPct:`${Math.round((idx/(steps.length-1))*100)}%`,
+
+      tournamentOptions, jerseyOptions, roster, terms, summary,
+      personal:st.personal, team:st.team, solo:{...st.solo, preview:soloPreview},
+
+      emailInputStyle: emailBad? badInputStyle: errInputStyle, emailBad, errMsgStyle,
+      firstInputStyle: firstBad? badInputStyle: errInputStyle, firstBad,
+      lastInputStyle: lastBad? badInputStyle: errInputStyle, lastBad,
+      mobileInputStyle: mobileBad? badInputStyle: errInputStyle, mobileBad,
+
+      self15Check: self15? '✓':'',
+      self15Style:`display:flex;align-items:center;gap:14px;width:100%;text-align:left;margin-top:20px;border-radius:14px;padding:16px 18px;font:600 15px 'Alegreya Sans',sans-serif;cursor:pointer;transition:transform .12s;`+
+        (self15? 'background:var(--surface-2);color:var(--text);border:2px solid var(--hi);':'background:var(--surface);color:var(--text);border:2px solid rgba(237,230,218,.3);'),
+      self15BoxStyle:`flex:none;width:28px;height:28px;border-radius:8px;font:700 16px/24px 'Oswald',sans-serif;text-align:center;`+
+        (self15? 'background:var(--hi);color:var(--ink);border:2px solid var(--hi);':'background:transparent;border:2px solid rgba(237,230,218,.4);'),
+
+      canAddSub: st.team.players.length<3,
+
+      acceptCheck: acceptOn? '✓':'',
+      acceptStyle:`display:flex;align-items:center;gap:14px;width:100%;text-align:left;margin-top:20px;border-radius:14px;padding:16px 18px;font:600 15px 'Alegreya Sans',sans-serif;cursor:pointer;transition:transform .12s;`+
+        (acceptOn? 'background:var(--surface-2);color:var(--text);border:2px solid var(--hi);':'background:var(--surface);color:var(--text);border:2px solid rgba(237,230,218,.3);'),
+      acceptBoxStyle:`flex:none;width:28px;height:28px;border-radius:8px;font:700 16px/24px 'Oswald',sans-serif;text-align:center;`+
+        (acceptOn? 'background:var(--hi);color:var(--ink);border:2px solid var(--hi);':'background:transparent;border:2px solid rgba(237,230,218,.4);'),
+
+      nextLabel: key==='review'? (st.submitting? t.submitting : t.submit) : t.next,
+      nextStyle: nextBase + (canGo? 'background:var(--accent);color:var(--on-accent);box-shadow:0 5px 0 var(--ink);cursor:pointer;':'background:var(--surface-2);color:#857A6D;cursor:not-allowed;'),
+      backStyle:"background:transparent;border:2px solid rgba(237,230,218,.25);border-radius:999px;padding:11px 22px;font:600 14px 'Oswald',sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--text);cursor:pointer;",
+
+      h:{
+        toggleLang:()=>this.setState(s=>({lang:s.lang==='gr'?'en':'gr'})),
+        openWizard:()=>this.setState({wizardOpen:true, stepIndex:0, submitted:false}),
+        closeWizard:()=>this.setState({wizardOpen:false}),
+        backdropClose:()=>this.setState({wizardOpen:false}),
+        stop:(e)=>e.stopPropagation(),
+        next:()=>this.next(), prev:()=>this.prev(),
+        onEmail:(e)=>this.setPersonal('email',e.target.value),
+        onFirst:(e)=>this.setPersonal('firstName',e.target.value),
+        onLast:(e)=>this.setPersonal('lastName',e.target.value),
+        onMobile:(e)=>this.setPersonal('mobile',e.target.value.replace(/\D/g,'').slice(0,10)),
+        touchEmail:()=>this.touch('email'), touchFirst:()=>this.touch('firstName'),
+        touchLast:()=>this.touch('lastName'), touchMobile:()=>this.touch('mobile'),
+        toggleAllIs15:()=>this.setState(s=>({everyoneIs15:!s.everyoneIs15})),
+        onTeamName:(e)=>this.setTeam('name',e.target.value),
+        addSub:()=>this.setState(s=>({team:{...s.team,players:[...s.team.players,{name:'',nick:''}]}})),
+        onSolo:(e)=>this.setState({solo:{nickname:e.target.value}}),
+        toggleAccept:()=>this.setState(s=>({accepted:!s.accepted})),
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>
