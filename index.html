@@ -389,9 +389,11 @@
               </sc-if>
               <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
                 <div style="text-align:center;padding:30px 0;animation:pop .4s ease both">
-                  <div style="width:96px;height:96px;margin:0 auto;border-radius:50%;background:var(--accent);border:5px solid var(--ink);box-shadow:0 8px 0 var(--ink);position:relative">
+                  <div style="width:96px;height:96px;margin:0 auto;border-radius:50%;background:radial-gradient(80% 80% at 32% 28%,rgba(255,255,255,.28),transparent 58%),var(--accent);border:5px solid var(--ink);box-shadow:0 8px 0 var(--ink);position:relative;overflow:hidden">
                     <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;background:var(--ink);transform:translateX(-50%)"></div>
                     <div style="position:absolute;left:0;right:0;top:50%;height:3px;background:var(--ink);transform:translateY(-50%)"></div>
+                    <div style="position:absolute;top:-12%;bottom:-12%;left:-30%;width:76%;border:3px solid var(--ink);border-radius:50%"></div>
+                    <div style="position:absolute;top:-12%;bottom:-12%;right:-30%;width:76%;border:3px solid var(--ink);border-radius:50%"></div>
                   </div>
                   <h2 style="font:700 34px/1 'Oswald',sans-serif;text-transform:uppercase;margin:24px 0 0">{{ t.successTitle }}</h2>
                   <p style="font:400 17px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);max-width:26em;margin:12px auto 0">{{ t.successBody }}</p>
