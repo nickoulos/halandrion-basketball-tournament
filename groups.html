@@ -51,6 +51,12 @@
   h1 span{color:var(--hi)}
   .intro p{font:400 18px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);max-width:34em;margin:14px 0 0;text-wrap:pretty}
 
+  .live{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font:500 13px var(--label);letter-spacing:.04em;color:var(--muted)}
+  .live[hidden]{display:none}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(79,174,119,.6);animation:pulse 2s ease-out infinite}
+  .live.stale .live-dot{background:var(--muted);animation:none}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,174,119,.55)}100%{box-shadow:0 0 0 9px rgba(79,174,119,0)}}
+
   /* tabs */
   .tabs{display:inline-flex;gap:6px;padding:6px;border-radius:999px;background:var(--surface);border:2px solid var(--ink);box-shadow:0 5px 0 var(--ink);margin:6px 0 30px}
   .tab{border:none;border-radius:999px;padding:11px 22px;font:700 15px var(--label);letter-spacing:.06em;color:var(--muted);background:transparent;cursor:pointer;transition:background .15s,color .15s}
@@ -171,6 +177,7 @@
     <div class="eyebrow" data-t="eyebrow" data-caps></div>
     <h1><span data-t="title1" data-caps></span><br><span data-t="title2" data-caps></span></h1>
     <p data-t="intro"></p>
+    <div class="live" id="live" hidden><span class="live-dot"></span><span id="live-text"></span></div>
   </section>
 
   <div class="tabs" role="tablist">
@@ -207,54 +214,8 @@
   <span data-t="footerNote"></span>
 </footer>
 
+<script src="tournament.js"></script>
 <script>
-/* ════════════════════════════════════════════════════════════
-   TOURNAMENT DATA — edit here, commit, push.
-   Scores: set `score: [home, away]` on a match, e.g. score: [21, 17].
-   Standings, best thirds and the knockout bracket fill in automatically.
-   Optional `time: '18:30'` and `court: '1'` show under a fixture.
-   ════════════════════════════════════════════════════════════ */
-const GROUPS = {
-  A: ['Τρεις και ο κούκλος', 'Αντί Συναφήν', 'Greek Russian', 'Santa'],
-  B: ['Τα πουλέν', 'Συναφήν', 'Midrange Union', 'AJG'],
-  C: ['Rawdoggers', 'Κουφάλες', 'Άσχετοι BC', 'The Jokers'],
-};
-
-// Round robin: every team plays the other three once (6 games per group, 18 total).
-// Each round, every team plays exactly once.
-const MATCHES = [
-  // Round 1
-  { id: 1,  round: 1, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Santa',          score: null },
-  { id: 2,  round: 1, group: 'B', home: 'Τα πουλέν',          away: 'AJG',            score: null },
-  { id: 3,  round: 1, group: 'C', home: 'Rawdoggers',         away: 'The Jokers',     score: null },
-  { id: 4,  round: 1, group: 'A', home: 'Αντί Συναφήν',       away: 'Greek Russian',  score: null },
-  { id: 5,  round: 1, group: 'B', home: 'Συναφήν',            away: 'Midrange Union', score: null },
-  { id: 6,  round: 1, group: 'C', home: 'Κουφάλες',           away: 'Άσχετοι BC',     score: null },
-  // Round 2
-  { id: 7,  round: 2, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Greek Russian',  score: null },
-  { id: 8,  round: 2, group: 'B', home: 'Τα πουλέν',          away: 'Midrange Union', score: null },
-  { id: 9,  round: 2, group: 'C', home: 'Rawdoggers',         away: 'Άσχετοι BC',     score: null },
-  { id: 10, round: 2, group: 'A', home: 'Santa',              away: 'Αντί Συναφήν',   score: null },
-  { id: 11, round: 2, group: 'B', home: 'AJG',                away: 'Συναφήν',        score: null },
-  { id: 12, round: 2, group: 'C', home: 'The Jokers',         away: 'Κουφάλες',       score: null },
-  // Round 3
-  { id: 13, round: 3, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Αντί Συναφήν',   score: null },
-  { id: 14, round: 3, group: 'B', home: 'Τα πουλέν',          away: 'Συναφήν',        score: null },
-  { id: 15, round: 3, group: 'C', home: 'Rawdoggers',         away: 'Κουφάλες',       score: null },
-  { id: 16, round: 3, group: 'A', home: 'Greek Russian',      away: 'Santa',          score: null },
-  { id: 17, round: 3, group: 'B', home: 'Midrange Union',     away: 'AJG',            score: null },
-  { id: 18, round: 3, group: 'C', home: 'Άσχετοι BC',         away: 'The Jokers',     score: null },
-];
-
-// Knockout scores, filled in as games finish. Teams are derived from the group stage.
-const KNOCKOUT = {
-  QF1: { score: null }, QF2: { score: null }, QF3: { score: null }, QF4: { score: null },
-  SF1: { score: null }, SF2: { score: null },
-  F:   { score: null },
-};
-
-/* ════════════════════════════════════════════════════════════ */
-
 const STR = {
   gr: {
     brand: 'Κύπελλο Μπάσκετ Χαλανδρίου', brandSub: 'Σύνδεσμος Μικρασιατών Χαλανδρίου — Ρίζες',
@@ -280,6 +241,7 @@ const STR = {
     thirdsTitle: 'Μάχη των 3ων',
     thirdOf: g => '3ος Ομίλου ' + g,
     footerNote: 'Φτιαγμένο με αγάπη για τη γειτονιά',
+    live: t => 'Ζωντανά αποτελέσματα · ενημέρωση ' + t, stale: 'Δεν ήταν δυνατή η ενημέρωση — δοκιμάζω ξανά',
     ids: { QF1: 'ΠΡ1', QF2: 'ΠΡ2', QF3: 'ΠΡ3', QF4: 'ΠΡ4', SF1: 'ΗΜ1', SF2: 'ΗΜ2', F: 'Τελικός' },
   },
   en: {
@@ -306,78 +268,22 @@ const STR = {
     thirdsTitle: 'Race of the thirds',
     thirdOf: g => 'Group ' + g + ' 3rd place',
     footerNote: 'Made with love for the neighbourhood',
+    live: t => 'Live scores · updated ' + t, stale: 'Couldn’t refresh — retrying',
     ids: { QF1: 'QF1', QF2: 'QF2', QF3: 'QF3', QF4: 'QF4', SF1: 'SF1', SF2: 'SF2', F: 'Final' },
   },
 };
-
-// Greek all-caps drops the tonos (ΌΜΙΛΟΙ → ΟΜΙΛΟΙ); CSS uppercase would keep it.
-const caps = s => (s || '').toLocaleUpperCase('el').normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC');
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 let lang = 'gr';
 try { const q = new URLSearchParams(location.search).get('lang'); lang = q === 'en' || q === 'gr' ? q : (localStorage.getItem('hbt-lang') || 'gr'); } catch (e) {}
 if (!STR[lang]) lang = 'gr';
 
-/* ── standings ── */
-const played = m => Array.isArray(m.score) && m.score.length === 2;
-
-function table(group) {
-  const rows = Object.fromEntries(GROUPS[group].map(t => [t, { team: t, group, p: 0, w: 0, l: 0, pf: 0, pa: 0 }]));
-  for (const m of MATCHES) {
-    if (m.group !== group || !played(m)) continue;
-    const [hs, as] = m.score, h = rows[m.home], a = rows[m.away];
-    h.p++; a.p++; h.pf += hs; h.pa += as; a.pf += as; a.pa += hs;
-    if (hs > as) { h.w++; a.l++; } else if (as > hs) { a.w++; h.l++; }
-  }
-  return sortRows(Object.values(rows));
-}
-
-const sortRows = rows => rows.sort((x, y) =>
-  (y.w - x.w) || ((y.pf - y.pa) - (x.pf - x.pa)) || (y.pf - x.pf) || GROUPS[x.group].indexOf(x.team) - GROUPS[y.group].indexOf(y.team));
-
-const groupsDone = () => MATCHES.every(played);
-
-/* ── knockout ── */
-function seeds() {
-  const tables = Object.keys(GROUPS).map(table);
-  const tier = i => sortRows(tables.map(t => t[i]));
-  const thirds = tier(2);
-  return { list: [...tier(0), ...tier(1), ...thirds.slice(0, 2)], thirds };
-}
-
-// QF: 1v8, 4v5, 2v7, 3v6 — reassign 6/7/8 if that would pit two teams from the same group against each other.
-function quarterPairs(s) {
-  const perms = [[5, 6, 7], [5, 7, 6], [6, 5, 7], [6, 7, 5], [7, 5, 6], [7, 6, 5]];
-  const ok = p => s[2].group !== s[p[0]].group && s[1].group !== s[p[1]].group && s[0].group !== s[p[2]].group;
-  const p = perms.find(ok) || perms[0];
-  return { QF1: [0, p[2]], QF2: [3, 4], QF3: [1, p[1]], QF4: [2, p[0]] };
-}
-
-function winner(id, teams) {
-  const sc = KNOCKOUT[id] && KNOCKOUT[id].score;
-  if (!teams[0] || !teams[1] || !Array.isArray(sc) || sc[0] === sc[1]) return null;
-  return sc[0] > sc[1] ? teams[0] : teams[1];
-}
-
+// Knockout ties with page labels: seed names for quarter-finals, "Winner X" after that.
 function bracket() {
-  const S = STR[lang], done = groupsDone(), sd = seeds();
-  const qfIdx = done ? quarterPairs(sd.list) : { QF1: [0, 7], QF2: [3, 4], QF3: [1, 6], QF4: [2, 5] };
-  const ties = {};
-  for (const id of ['QF1', 'QF2', 'QF3', 'QF4']) {
-    const [a, b] = qfIdx[id];
-    ties[id] = {
-      teams: done ? [sd.list[a].team, sd.list[b].team] : [null, null],
-      labels: [S.seed[a], S.seed[b]],
-    };
+  const S = STR[lang], ko = knockout();
+  for (const [id, t] of Object.entries(ko.ties)) {
+    t.labels = t.seeds ? t.seeds.map(i => S.seed[i]) : t.from.map(f => S.winnerOf(S.ids[f]));
   }
-  const feed = (id, from) => {
-    const teams = from.map(f => winner(f, ties[f].teams));
-    ties[id] = { teams, labels: from.map(f => S.winnerOf(S.ids[f])) };
-  };
-  feed('SF1', ['QF1', 'QF2']);
-  feed('SF2', ['QF3', 'QF4']);
-  feed('F', ['SF1', 'SF2']);
-  return { ties, thirds: sd.thirds, done, champion: winner('F', ties.F.teams) };
+  return ko;
 }
 
 /* ── render ── */
@@ -485,9 +391,35 @@ document.getElementById('lang-btn').addEventListener('click', () => {
   render();
 });
 
-function render() { renderStatic(); renderGroups(); renderKnockout(); }
+/* ── live scores ── */
+let lastSync = null, syncFailed = false;
+
+function renderLive() {
+  const box = document.getElementById('live');
+  box.hidden = !SCORES_URL || (!lastSync && !syncFailed);
+  box.classList.toggle('stale', syncFailed);
+  const hhmm = lastSync && lastSync.toLocaleTimeString(lang === 'gr' ? 'el-GR' : 'en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+  document.getElementById('live-text').textContent = syncFailed ? STR[lang].stale : STR[lang].live(hhmm);
+}
+
+async function sync() {
+  if (!SCORES_URL || document.hidden) return;
+  // re-render only on change, so the cards don't replay their entrance animation every poll
+  const snapshot = () => JSON.stringify([MATCHES.map(m => m.score), KNOCKOUT]);
+  try {
+    const before = snapshot();
+    await fetchScores(); lastSync = new Date(); syncFailed = false;
+    if (snapshot() !== before) render(); else renderLive();
+  }
+  catch (e) { syncFailed = true; renderLive(); }
+}
+
+function render() { renderStatic(); renderGroups(); renderKnockout(); renderLive(); }
 render();
 selectTab(location.hash === '#knockout' ? 'knockout' : 'groups');
+sync();
+setInterval(sync, 45000);
+document.addEventListener('visibilitychange', sync);
 </script>
 </body>
 </html>

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Καταχώρηση σκορ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Alegreya+Sans:wght@400;500;700&family=Sofia+Sans+Extra+Condensed:wght@700..1000&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12100E; --surface:#1C1916; --surface-2:#26221E;
+    --text:#EDE6DA; --muted:#9A8F80; --line:rgba(237,230,218,.14);
+    --accent:#C4562E; --accent-text:#E0784C; --hi:#F0A02B;
+    --ok:#4FAE77; --ink:#000; --on-accent:#FFFFFF;
+    --head:'Sofia Sans Extra Condensed','Oswald',sans-serif;
+    --label:'Oswald','Sofia Sans Extra Condensed',sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Alegreya Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-variant-numeric:lining-nums;min-height:100vh}
+  a{color:var(--accent-text);text-decoration:none}
+  button,input{font-family:inherit}
+  [hidden]{display:none!important}
+
+  .site-header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;background:rgba(18,16,14,.92);backdrop-filter:blur(10px);border-bottom:2px solid rgba(237,230,218,.12)}
+  .brand{font:900 16px/1 var(--head);letter-spacing:.04em}
+  .brand small{display:block;font:600 10px var(--label);letter-spacing:.18em;color:var(--accent-text);margin-top:4px}
+  .pill{background:transparent;border:2px solid rgba(237,230,218,.25);border-radius:999px;padding:7px 12px;font:600 12px var(--label);letter-spacing:.05em;color:var(--text);cursor:pointer;white-space:nowrap}
+  .pill:hover{background:rgba(237,230,218,.08);color:var(--text)}
+  .header-actions{display:flex;gap:8px}
+
+  main{max-width:640px;margin:0 auto;padding:22px 16px 60px}
+
+  .card{border-radius:16px;border:2px solid var(--ink);background:var(--surface);box-shadow:0 6px 0 var(--ink)}
+
+  /* login */
+  .login{padding:26px 22px;margin-top:30px}
+  .login h1{font:1000 40px/.95 var(--head);margin:0}
+  .login p{color:var(--muted);font-size:16px;line-height:1.5;margin:10px 0 20px}
+  .field{width:100%;border:2px solid rgba(237,230,218,.25);border-radius:12px;padding:14px 15px;font-size:18px;background:var(--surface-2);color:var(--text)}
+  .field:focus{outline:none;border-color:var(--hi)}
+  .btn{border:none;border-radius:999px;padding:13px 22px;font:700 15px var(--label);letter-spacing:.06em;cursor:pointer;box-shadow:0 4px 0 var(--ink);transition:transform .1s}
+  .btn:active{transform:translateY(2px);box-shadow:0 2px 0 var(--ink)}
+  .btn:disabled{opacity:.5;cursor:default;transform:none}
+  .btn-primary{background:var(--accent);color:var(--on-accent)}
+  .btn-ghost{background:var(--surface-2);color:var(--text)}
+  .login .btn{width:100%;margin-top:14px}
+  .msg{font-size:15px;line-height:1.4;margin-top:12px;min-height:1.4em}
+  .msg.err{color:var(--accent-text)}
+  .msg.ok{color:var(--ok)}
+
+  /* panel */
+  .who{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .who b{font:900 26px/1 var(--head)}
+  .who span{color:var(--muted);font-size:15px}
+  .progress{height:8px;border-radius:999px;background:rgba(237,230,218,.12);overflow:hidden;margin:12px 0 4px}
+  .progress div{height:100%;background:linear-gradient(90deg,var(--accent),var(--hi));transition:width .3s}
+  .progress-label{font:500 13px var(--label);letter-spacing:.04em;color:var(--muted)}
+  .sync{font-size:13px;color:var(--muted);margin-top:2px}
+
+  .section{font:600 12px var(--label);letter-spacing:.2em;color:var(--accent-text);margin:30px 0 12px}
+  .match{padding:14px 14px 12px;margin-bottom:14px;border-color:var(--ink)}
+  .match.saved{border-color:rgba(79,174,119,.7)}
+  .match.dirty{border-color:var(--hi)}
+  .match.waiting{opacity:.55}
+  .m-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font:600 11px var(--label);letter-spacing:.14em;color:var(--muted)}
+  .m-top .state.saved{color:var(--ok)}
+  .m-top .state.dirty{color:var(--hi)}
+  .m-row{display:grid;grid-template-columns:1fr 64px 10px 64px 1fr;align-items:center;gap:8px}
+  .m-row .t{font:800 19px/1.05 var(--head);overflow-wrap:anywhere}
+  .m-row .t.home{text-align:right}
+  .m-row .t.tbd{font:500 14px/1.25 'Alegreya Sans',sans-serif;color:var(--muted)}
+  .m-row .dash{text-align:center;color:var(--muted)}
+  .score{width:100%;text-align:center;border:2px solid rgba(237,230,218,.25);border-radius:10px;padding:10px 4px;font:700 22px var(--label);background:var(--surface-2);color:var(--text);-moz-appearance:textfield}
+  .score::-webkit-outer-spin-button,.score::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .score:focus{outline:none;border-color:var(--hi)}
+  .score:disabled{opacity:.5}
+  .m-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:12px}
+  .m-actions .msg{margin:0 auto 0 0;font-size:14px}
+  .m-actions .btn{padding:10px 18px;font-size:14px}
+  .linkish{background:none;border:none;color:var(--muted);font:500 14px 'Alegreya Sans',sans-serif;text-decoration:underline;cursor:pointer;padding:6px}
+
+  .notice{padding:16px 18px;margin-top:16px;color:var(--muted);font-size:15px;line-height:1.5}
+  .notice b{color:var(--text)}
+
+  @media (max-width:420px){
+    .m-row{grid-template-columns:1fr 54px 8px 54px 1fr;gap:6px}
+    .m-row .t{font-size:17px}
+    .score{font-size:20px}
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="brand">ΚΥΠΕΛΛΟ ΜΠΑΣΚΕΤ ΧΑΛΑΝΔΡΙΟΥ<small>ΚΑΤΑΧΩΡΗΣΗ ΣΚΟΡ</small></div>
+  <div class="header-actions">
+    <a class="pill" href="groups.html" target="_blank" rel="noopener">ΔΗΜΟΣΙΑ ΣΕΛΙΔΑ ↗</a>
+  </div>
+</header>
+
+<main>
+  <div class="notice card" id="not-configured" hidden>
+    <b>Δεν έχει συνδεθεί ακόμα το Google Sheet.</b> Στο <code>tournament.js</code> λείπει το <code>SCORES_URL</code>.
+  </div>
+
+  <form class="login card" id="login" hidden>
+    <h1>ΣΚΟΡ<br>ΑΓΩΝΩΝ</h1>
+    <p>Βάλε τον κωδικό που σου έδωσαν οι διοργανωτές για να περνάς τα αποτελέσματα.</p>
+    <input class="field" id="code" type="password" autocomplete="current-password" placeholder="Κωδικός" required>
+    <button class="btn btn-primary" id="login-btn" type="submit">ΕΙΣΟΔΟΣ</button>
+    <div class="msg err" id="login-msg" role="alert"></div>
+  </form>
+
+  <div id="panel" hidden>
+    <div class="who"><div><span>Συνδεδεμένος ως</span><br><b id="who-name"></b></div>
+      <div style="display:flex;gap:8px"><button class="pill" id="refresh" type="button">ΑΝΑΝΕΩΣΗ</button><button class="pill" id="logout" type="button">ΕΞΟΔΟΣ</button></div>
+    </div>
+    <div class="progress"><div id="progress-bar" style="width:0"></div></div>
+    <div class="progress-label" id="progress-label"></div>
+    <div class="sync" id="sync"></div>
+    <div id="matches"></div>
+  </div>
+</main>
+
+<script src="tournament.js"></script>
+<script>
+const KO_NAMES = { QF1: 'Προημιτελικός 1', QF2: 'Προημιτελικός 2', QF3: 'Προημιτελικός 3', QF4: 'Προημιτελικός 4', SF1: 'Ημιτελικός 1', SF2: 'Ημιτελικός 2', F: 'Τελικός' };
+const KO_SHORT = { QF1: 'ΠΡ1', QF2: 'ΠΡ2', QF3: 'ΠΡ3', QF4: 'ΠΡ4', SF1: 'ΗΜ1', SF2: 'ΗΜ2', F: 'Τελικός' };
+const ERRORS = {
+  bad_code: 'Ο κωδικός δεν ισχύει.',
+  tie: 'Δεν γίνεται ισοπαλία — έλεγξε το σκορ.',
+  bad_score: 'Το σκορ πρέπει να είναι αριθμοί από 0 έως 300.',
+  bad_id: 'Άγνωστος αγώνας.',
+  network: 'Δεν αποθηκεύτηκε — έλεγξε τη σύνδεση και ξαναδοκίμασε.',
+};
+
+const $ = id => document.getElementById(id);
+let code = '';
+const drafts = {};     // id -> [home, away] strings typed but not yet saved
+const status = {};     // id -> { text, kind }
+const busy = new Set();
+
+const store = {
+  get() { try { return sessionStorage.getItem('hbt-admin') || ''; } catch (e) { return ''; } },
+  set(v) { try { v ? sessionStorage.setItem('hbt-admin', v) : sessionStorage.removeItem('hbt-admin'); } catch (e) {} },
+};
+
+/* ── list of everything that gets a score, in playing order ── */
+function games() {
+  const ko = knockout();
+  const list = MATCHES.map(m => ({
+    id: String(m.id), section: `Γύρος ${m.round}`, tag: `Όμιλος ${m.group} · #${m.id}`,
+    teams: [m.home, m.away], score: m.score,
+  }));
+  for (const id of KO_IDS) {
+    const t = ko.ties[id];
+    const wait = t.seeds ? 'Μετά τους ομίλους' : null;
+    list.push({
+      id, section: id === 'F' ? 'Τελικός' : id.startsWith('QF') ? 'Προημιτελικά' : 'Ημιτελικά',
+      tag: KO_NAMES[id], teams: t.teams,
+      placeholders: t.seeds ? [wait, wait] : t.from.map(f => 'Νικητής ' + KO_SHORT[f]),
+      score: KNOCKOUT[id].score,
+    });
+  }
+  return list;
+}
+
+const sameScore = (draft, score) => score ? draft[0] === String(score[0]) && draft[1] === String(score[1]) : draft[0] === '' && draft[1] === '';
+
+/* ── render ── */
+function render() {
+  const list = games();
+  const done = list.filter(g => g.score).length;
+  $('progress-bar').style.width = (done / list.length * 100) + '%';
+  $('progress-label').textContent = `${done} από ${list.length} αγώνες έχουν σκορ`;
+
+  let html = '', section = '';
+  for (const g of list) {
+    if (g.section !== section) { section = g.section; html += `<div class="section">${esc(caps(section))}</div>`; }
+    const ready = g.teams[0] && g.teams[1];
+    const draft = drafts[g.id] || (g.score ? g.score.map(String) : ['', '']);
+    const dirty = drafts[g.id] && !sameScore(drafts[g.id], g.score);
+    const st = status[g.id];
+    const state = dirty ? ['dirty', 'ΔΕΝ ΑΠΟΘΗΚΕΥΤΗΚΕ'] : g.score ? ['saved', 'ΑΠΟΘΗΚΕΥΜΕΝΟ ✓'] : ['', ''];
+    const name = i => g.teams[i]
+      ? `<span class="t ${i ? '' : 'home'}">${esc(g.teams[i])}</span>`
+      : `<span class="t tbd ${i ? '' : 'home'}">${esc(g.placeholders[i])}</span>`;
+    const dis = !ready || busy.has(g.id) ? 'disabled' : '';
+    html += `<div class="match card ${state[0]} ${ready ? '' : 'waiting'}" data-id="${g.id}">
+      <div class="m-top"><span>${esc(caps(g.tag))}</span><span class="state ${state[0]}">${state[1]}</span></div>
+      <div class="m-row">
+        ${name(0)}
+        <input class="score" type="number" inputmode="numeric" min="0" max="300" data-i="0" value="${esc(draft[0])}" aria-label="Πόντοι ${esc(g.teams[0] || '')}" ${dis}>
+        <span class="dash">–</span>
+        <input class="score" type="number" inputmode="numeric" min="0" max="300" data-i="1" value="${esc(draft[1])}" aria-label="Πόντοι ${esc(g.teams[1] || '')}" ${dis}>
+        ${name(1)}
+      </div>
+      ${ready ? `<div class="m-actions">
+        <span class="msg ${st ? st.kind : ''}" role="status">${st ? esc(st.text) : ''}</span>
+        ${g.score ? `<button class="linkish" type="button" data-act="clear" ${dis}>Διαγραφή</button>` : ''}
+        <button class="btn btn-primary" type="button" data-act="save" ${dis}>${busy.has(g.id) ? 'ΑΠΟΘΗΚΕΥΣΗ…' : 'ΑΠΟΘΗΚΕΥΣΗ'}</button>
+      </div>` : ''}
+    </div>`;
+  }
+  $('matches').innerHTML = html;
+}
+
+function setSync(text) { $('sync').textContent = text; }
+const now = () => new Date().toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+/* ── actions ── */
+async function save(id, score) {
+  busy.add(id); status[id] = null; render();
+  try {
+    const res = await postScores({ action: 'save', code, id, score });
+    if (res.ok) {
+      delete drafts[id];
+      status[id] = { text: score ? 'Αποθηκεύτηκε.' : 'Διαγράφηκε.', kind: 'ok' };
+      setSync('Τελευταίος συγχρονισμός ' + now());
+    } else if (res.error === 'bad_code') {
+      return logout(ERRORS.bad_code);
+    } else {
+      status[id] = { text: ERRORS[res.error] || res.error, kind: 'err' };
+    }
+  } catch (e) {
+    status[id] = { text: ERRORS.network, kind: 'err' };
+  } finally {
+    busy.delete(id);
+  }
+  render();
+}
+
+$('matches').addEventListener('input', e => {
+  const card = e.target.closest('.match');
+  if (!card || !e.target.matches('.score')) return;
+  const id = card.dataset.id, inputs = card.querySelectorAll('.score');
+  drafts[id] = [inputs[0].value.trim(), inputs[1].value.trim()];
+  status[id] = null;
+  const g = games().find(x => x.id === id);
+  const dirty = !sameScore(drafts[id], g.score);
+  card.classList.toggle('dirty', dirty);
+  card.classList.toggle('saved', !dirty && !!g.score);
+  const st = card.querySelector('.state');
+  st.className = 'state ' + (dirty ? 'dirty' : g.score ? 'saved' : '');
+  st.textContent = dirty ? 'ΔΕΝ ΑΠΟΘΗΚΕΥΤΗΚΕ' : g.score ? 'ΑΠΟΘΗΚΕΥΜΕΝΟ ✓' : '';
+  const msg = card.querySelector('.m-actions .msg');
+  if (msg) { msg.textContent = ''; msg.className = 'msg'; }
+});
+
+$('matches').addEventListener('click', e => {
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  const card = btn.closest('.match'), id = card.dataset.id;
+  const g = games().find(x => x.id === id);
+  if (btn.dataset.act === 'clear') {
+    if (confirm(`Διαγραφή σκορ για ${g.teams[0]} – ${g.teams[1]};`)) save(id, null);
+    return;
+  }
+  const vals = [...card.querySelectorAll('.score')].map(i => i.value.trim());
+  const nums = vals.map(Number);
+  const msg = card.querySelector('.m-actions .msg');
+  const fail = text => { msg.textContent = text; msg.className = 'msg err'; };
+  if (vals.some(v => v === '') || !nums.every(n => Number.isInteger(n) && n >= 0 && n <= 300)) return fail(ERRORS.bad_score);
+  if (nums[0] === nums[1]) return fail(ERRORS.tie);
+  save(id, nums);
+});
+
+// Enter in a score box saves that game
+$('matches').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || !e.target.matches('.score')) return;
+  e.preventDefault();
+  const btn = e.target.closest('.match').querySelector('[data-act=save]');
+  if (btn) btn.click();
+});
+
+async function refresh() {
+  setSync('Συγχρονισμός…');
+  try { await fetchScores(); setSync('Τελευταίος συγχρονισμός ' + now()); render(); }
+  catch (e) { setSync('Δεν ήταν δυνατός ο συγχρονισμός — δοκίμασε «Ανανέωση».'); }
+}
+
+/* ── login ── */
+async function login(candidate, silent) {
+  $('login-btn').disabled = true;
+  $('login-msg').textContent = silent ? '' : 'Έλεγχος…';
+  try {
+    const res = await postScores({ action: 'login', code: candidate });
+    if (!res.ok) { store.set(''); showLogin(ERRORS[res.error] || res.error); return; }
+    code = candidate; store.set(code);
+    $('who-name').textContent = res.name;
+    $('login').hidden = true; $('panel').hidden = false;
+    setSync('Τελευταίος συγχρονισμός ' + now());
+    render();
+  } catch (e) {
+    showLogin(ERRORS.network.replace('Δεν αποθηκεύτηκε', 'Δεν έγινε σύνδεση'));
+  } finally {
+    $('login-btn').disabled = false;
+  }
+}
+
+function showLogin(err) {
+  $('panel').hidden = true; $('login').hidden = false;
+  $('login-msg').textContent = err || '';
+}
+
+function logout(err) {
+  code = ''; store.set('');
+  $('code').value = '';
+  showLogin(err);
+}
+
+$('login').addEventListener('submit', e => { e.preventDefault(); login($('code').value.trim()); });
+$('logout').addEventListener('click', () => logout());
+$('refresh').addEventListener('click', refresh);
+
+// pick up results entered by another admin, without touching anything being typed
+setInterval(() => {
+  const typing = document.activeElement && document.activeElement.matches('.score');
+  if (code && !document.hidden && !busy.size && !typing) refresh();
+}, 60000);
+
+if (!SCORES_URL) {
+  $('not-configured').hidden = false;
+} else {
+  const saved = store.get();
+  if (saved) { $('login').hidden = true; login(saved, true); } else showLogin();
+}
+</script>
+</body>
+</html>
