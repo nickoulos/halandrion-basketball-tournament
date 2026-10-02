@@ -2,7 +2,7 @@
 
    Scores live in a Google Sheet behind a Google Apps Script web app (see apps-script/scores.gs).
    SCORES_URL is that web app's /exec URL. Leave it empty to run on the scores written below only. */
-const SCORES_URL = '';
+const SCORES_URL = 'https://script.google.com/macros/s/AKfycbyyJT-UQyBhyQbj0Gk3BwKy7gyTQNvTQKj0iJXHxgKnLVEsqNBhk4ERmaCkLQqFYdrd/exec';
 
 /* Every team plays the other three in its group once (6 games per group, 18 total);
    each round, every team plays exactly once. A `score: [home, away]` written here is
