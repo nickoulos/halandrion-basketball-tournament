@@ -5,7 +5,8 @@
 const SCORES_URL = 'https://script.google.com/macros/s/AKfycbyyJT-UQyBhyQbj0Gk3BwKy7gyTQNvTQKj0iJXHxgKnLVEsqNBhk4ERmaCkLQqFYdrd/exec';
 
 /* Every team plays the other three in its group once (6 games per group, 18 total);
-   each round, every team plays exactly once. Times are indicative (one game every 15'). A `score: [home, away]` written here is
+   each round, every team plays exactly once. Order and times follow the organisers' schedule
+   (Πρόγραμμα.docx) and are indicative. A `score: [home, away]` written here is
    only a fallback — scores from SCORES_URL replace it. */
 const GROUPS = {
   A: ['Τρεις και ο κούκλος', 'Αντί Συναφήν', 'Greek Russian', 'Santa'],
@@ -15,26 +16,26 @@ const GROUPS = {
 
 const MATCHES = [
   // Round 1
-  { id: 1,  round: 1, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Santa',          time: '18:00', score: null },
-  { id: 2,  round: 1, group: 'B', home: 'Τα πουλέν',          away: 'AJG',            time: '18:15', score: null },
-  { id: 3,  round: 1, group: 'C', home: 'Rawdoggers',         away: 'The Jokers',     time: '18:30', score: null },
-  { id: 4,  round: 1, group: 'A', home: 'Αντί Συναφήν',       away: 'Greek Russian',  time: '18:45', score: null },
-  { id: 5,  round: 1, group: 'B', home: 'Συναφήν',            away: 'Midrange Union', time: '19:00', score: null },
-  { id: 6,  round: 1, group: 'C', home: 'Κουφάλες',           away: 'Άσχετοι BC',     time: '19:15', score: null },
+  { id: 1,  round: 1, group: 'B', home: 'Τα πουλέν',           away: 'Συναφήν',        time: '18:00', score: null },
+  { id: 2,  round: 1, group: 'B', home: 'Midrange Union',      away: 'AJG',            time: '18:15', score: null },
+  { id: 3,  round: 1, group: 'C', home: 'Rawdoggers',          away: 'The Jokers',     time: '18:30', score: null },
+  { id: 4,  round: 1, group: 'C', home: 'Κουφάλες',            away: 'Άσχετοι BC',     time: '18:45', score: null },
+  { id: 5,  round: 1, group: 'A', home: 'Αντί Συναφήν',        away: 'Greek Russian',  time: '19:00', score: null },
+  { id: 6,  round: 1, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Santa',          time: '19:15', score: null },
   // Round 2
-  { id: 7,  round: 2, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Greek Russian',  time: '19:30', score: null },
-  { id: 8,  round: 2, group: 'B', home: 'Τα πουλέν',          away: 'Midrange Union', time: '19:45', score: null },
-  { id: 9,  round: 2, group: 'C', home: 'Rawdoggers',         away: 'Άσχετοι BC',     time: '20:00', score: null },
-  { id: 10, round: 2, group: 'A', home: 'Santa',              away: 'Αντί Συναφήν',   time: '20:15', score: null },
-  { id: 11, round: 2, group: 'B', home: 'AJG',                away: 'Συναφήν',        time: '20:30', score: null },
-  { id: 12, round: 2, group: 'C', home: 'The Jokers',         away: 'Κουφάλες',       time: '20:45', score: null },
+  { id: 7,  round: 2, group: 'B', home: 'Τα πουλέν',           away: 'AJG',            time: '19:30', score: null },
+  { id: 8,  round: 2, group: 'B', home: 'Συναφήν',             away: 'Midrange Union', time: '19:45', score: null },
+  { id: 9,  round: 2, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Αντί Συναφήν',   time: '20:00', score: null },
+  { id: 10, round: 2, group: 'A', home: 'Greek Russian',       away: 'Santa',          time: '20:15', score: null },
+  { id: 11, round: 2, group: 'C', home: 'Rawdoggers',          away: 'Κουφάλες',       time: '20:30', score: null },
+  { id: 12, round: 2, group: 'C', home: 'The Jokers',          away: 'Άσχετοι BC',     time: '20:45', score: null },
   // Round 3
-  { id: 13, round: 3, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Αντί Συναφήν',   time: '21:00', score: null },
-  { id: 14, round: 3, group: 'B', home: 'Τα πουλέν',          away: 'Συναφήν',        time: '21:15', score: null },
-  { id: 15, round: 3, group: 'C', home: 'Rawdoggers',         away: 'Κουφάλες',       time: '21:30', score: null },
-  { id: 16, round: 3, group: 'A', home: 'Greek Russian',      away: 'Santa',          time: '21:45', score: null },
-  { id: 17, round: 3, group: 'B', home: 'Midrange Union',     away: 'AJG',            time: '22:00', score: null },
-  { id: 18, round: 3, group: 'C', home: 'Άσχετοι BC',         away: 'The Jokers',     time: '22:15', score: null },
+  { id: 13, round: 3, group: 'B', home: 'Τα πουλέν',           away: 'Midrange Union', time: '21:00', score: null },
+  { id: 14, round: 3, group: 'B', home: 'Συναφήν',             away: 'AJG',            time: '21:15', score: null },
+  { id: 15, round: 3, group: 'A', home: 'Τρεις και ο κούκλος', away: 'Greek Russian',  time: '21:30', score: null },
+  { id: 16, round: 3, group: 'A', home: 'Αντί Συναφήν',        away: 'Santa',          time: '21:45', score: null },
+  { id: 17, round: 3, group: 'C', home: 'Rawdoggers',          away: 'Άσχετοι BC',     time: '22:00', score: null },
+  { id: 18, round: 3, group: 'C', home: 'The Jokers',          away: 'Κουφάλες',       time: '22:15', score: null },
 ];
 
 // Knockout teams are derived from the group stage.
