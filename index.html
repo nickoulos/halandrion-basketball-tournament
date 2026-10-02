@@ -149,12 +149,12 @@
           <h2 style="font:700 clamp(28px,4vw,42px)/1 'Oswald',sans-serif;text-transform:uppercase;margin:8px 0 0">{{ t.scheduleTitle }}</h2>
           <p style="font:400 16px/1.5 'Alegreya Sans',sans-serif;color:var(--muted);max-width:36em;margin:12px 0 0">{{ t.scheduleBody }}</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
-            <span style="background:rgba(237,230,218,.06);border:1.5px dashed rgba(237,230,218,.28);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)">{{ t.chipBracket }}</span>
-            <span style="background:rgba(237,230,218,.06);border:1.5px dashed rgba(237,230,218,.28);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)">{{ t.chipTeams }}</span>
-            <span style="background:rgba(237,230,218,.06);border:1.5px dashed rgba(237,230,218,.28);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)">{{ t.chipTimes }}</span>
+            <span style="background:rgba(240,160,43,.12);border:1.5px solid rgba(240,160,43,.45);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--hi)">{{ t.chipBracket }}</span>
+            <span style="background:rgba(240,160,43,.12);border:1.5px solid rgba(240,160,43,.45);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--hi)">{{ t.chipTeams }}</span>
+            <span style="background:rgba(240,160,43,.12);border:1.5px solid rgba(240,160,43,.45);border-radius:999px;padding:7px 14px;font:600 13px 'Oswald',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--hi)">{{ t.chipTimes }}</span>
           </div>
         </div>
-        <div class="soon-tba" style="font:700 clamp(40px,6vw,72px)/.9 'Oswald',sans-serif;color:rgba(237,230,218,.12);text-transform:uppercase;text-align:right">TBA</div>
+        <a href="{{ drawHref }}" style="display:inline-block;justify-self:start;background:var(--accent);color:var(--on-accent);border-radius:999px;padding:16px 28px;font:700 16px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 6px 0 var(--ink);white-space:nowrap" style-hover="transform:translateY(-2px);box-shadow:0 8px 0 var(--ink);color:var(--on-accent)">{{ t.drawCta }} →</a>
       </div>
     </section>
 
@@ -471,8 +471,8 @@ class Component extends DCLogic {
       infoWhere:'Where', placeBig:'Chalandri Settlement', placeSub:'Mikras Asias & Aigaiou St.',
       infoCost:'Cost', costBig:'Free', costSub:'No entry fee — just show up and play',
       infoFormat:'Format', formatBig:'3on3 / 1v1',
-      soon:'Coming soon', scheduleTitle:'Schedule & bracket', scheduleBody:'Match times, group draw and the tournament bracket will be announced here once registrations close.',
-      chipBracket:'Bracket', chipTeams:'Teams', chipTimes:'Match times',
+      soon:'The draw is out', scheduleTitle:'Groups & bracket', scheduleBody:'See which group your team landed in, every group-stage pairing and the road to the final.',
+      chipBracket:'3 groups', chipTeams:'12 teams', chipTimes:'8 in the quarter-finals', drawCta:'See the groups',
       footerNote:'Made with love for the neighbourhood',
       qTournament:'Which tournament?', qTournamentSub:'Pick where you want to play. You can do both.',
       to3title:'Team play', to3desc:'3 on 3, with an optional sub',
@@ -516,8 +516,8 @@ class Component extends DCLogic {
       infoWhere:'Πού', placeBig:'Συνοικισμός Χαλανδρίου', placeSub:'Μικράς Ασίας & Αιγαίου',
       infoCost:'Κόστος', costBig:'Δωρεάν', costSub:'Χωρίς κόστος συμμετοχής — έλα και παίξε',
       infoFormat:'Μορφή', formatBig:'3ον3 / 1v1',
-      soon:'Σύντομα', scheduleTitle:'Πρόγραμμα & ταμπλό', scheduleBody:'Οι ώρες των αγώνων, η κλήρωση των ομίλων και το ταμπλό του τουρνουά θα ανακοινωθούν εδώ μόλις κλείσουν οι εγγραφές.',
-      chipBracket:'Ταμπλό', chipTeams:'Ομάδες', chipTimes:'Ώρες αγώνων',
+      soon:'Η κλήρωση έγινε', scheduleTitle:'Όμιλοι & ταμπλό', scheduleBody:'Δες σε ποιον όμιλο έπεσε η ομάδα σου, όλα τα ζευγάρια των ομίλων και τον δρόμο μέχρι τον τελικό.',
+      chipBracket:'3 όμιλοι', chipTeams:'12 ομάδες', chipTimes:'8 στα προημιτελικά', drawCta:'Δες τους ομίλους',
       footerNote:'Φτιαγμένο με αγάπη για τη γειτονιά',
       qTournament:'Σε ποιο τουρνουά;', qTournamentSub:'Διάλεξε πού θέλεις να παίξεις. Μπορείς και στα δύο.',
       to3title:'Ομαδικό', to3desc:'3 εναντίον 3, με προαιρετικό αναπληρωματικό',
@@ -788,7 +788,7 @@ class Component extends DCLogic {
 
     const nextBase="border:none;border-radius:999px;padding:13px 30px;font:700 15px 'Oswald',sans-serif;letter-spacing:.06em;text-transform:uppercase;transition:transform .12s;";
     return {
-      t, langLabel:t.otherLang,
+      t, langLabel:t.otherLang, drawHref:'groups.html?lang='+st.lang,
       brandFontStyle, heroH1Style, formatBigStyle,
       heroLine1Caps:caps(t.heroLine1), heroLine2Caps:caps(t.heroLine2),
       fb1, fb2, fb3, fb4, fb5, fb6, fb7,
