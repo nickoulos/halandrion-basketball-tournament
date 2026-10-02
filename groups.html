@@ -97,7 +97,9 @@
   .fx .s.done{color:var(--text)}
   .fx .w{color:var(--text)}
   .fx .l{color:var(--muted)}
-  .fx-meta{grid-column:1/-1;text-align:center;font:500 11px var(--label);letter-spacing:.08em;color:var(--muted);margin-top:-2px}
+  .fx-meta{grid-column:1/-1;text-align:center;font:500 12px var(--label);letter-spacing:.06em;color:var(--muted);margin-top:-1px}
+  .schedule-note{display:flex;gap:12px;align-items:flex-start;margin:0 0 24px;padding:14px 18px;border-radius:14px;border:2px dashed rgba(240,160,43,.45);background:rgba(240,160,43,.07);font:400 16px/1.45 'Alegreya Sans',sans-serif;color:var(--text)}
+  .schedule-note::before{content:"⏱";font-size:18px;line-height:1.3}
 
   .legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:28px;font:400 15px/1.45 'Alegreya Sans',sans-serif;color:var(--muted)}
   .legend b{font-weight:700;color:var(--text)}
@@ -186,6 +188,7 @@
   </div>
 
   <section role="tabpanel" id="panel-groups" aria-labelledby="tab-groups">
+    <p class="schedule-note" data-t="scheduleNote"></p>
     <div class="groups" id="groups"></div>
     <div class="legend">
       <span><span class="dot" style="background:var(--ok)"></span><span data-t="legendTop2"></span></span>
@@ -230,7 +233,8 @@ const STR = {
     qf: 'Προημιτελικά', sf: 'Ημιτελικά', final: 'Τελικός', champion: 'Πρωταθλητής',
     seed: ['Καλύτερος 1ος', '2ος καλύτερος 1ος', '3ος καλύτερος 1ος', 'Καλύτερος 2ος', '2ος καλύτερος 2ος', '3ος καλύτερος 2ος', 'Καλύτερος 3ος', '2ος καλύτερος 3ος'],
     winnerOf: id => 'Νικητής ' + id,
-    court: 'Γήπεδο',
+    court: 'Γήπεδο', game: 'Αγώνας',
+    scheduleNote: 'Οι ώρες και η ακριβής σειρά των αγώνων είναι ενδεικτικές και μπορεί να αλλάξουν κατά τη διάρκεια του τουρνουά.',
     howTitle: 'Πώς στήνεται το ταμπλό',
     how: [
       '<b>Οι 8 ομάδες κατατάσσονται</b> μετά τους ομίλους: πρώτα οι τρεις 1οι, μετά οι τρεις 2οι, μετά οι δύο καλύτεροι 3οι — μεταξύ τους με νίκες, διαφορά πόντων, πόντους υπέρ.',
@@ -257,7 +261,8 @@ const STR = {
     qf: 'Quarter-finals', sf: 'Semi-finals', final: 'Final', champion: 'Champion',
     seed: ['Best group winner', '2nd-best group winner', '3rd-best group winner', 'Best runner-up', '2nd-best runner-up', '3rd-best runner-up', 'Best 3rd place', '2nd-best 3rd place'],
     winnerOf: id => 'Winner ' + id,
-    court: 'Court',
+    court: 'Court', game: 'Game',
+    scheduleNote: 'Match times and the exact order of games are indicative and may change during the tournament.',
     howTitle: 'How the bracket is set',
     how: [
       '<b>The 8 qualifiers are seeded</b> after the groups: the three winners first, then the three runners-up, then the two best thirds — each tier ordered by wins, point difference, points scored.',
@@ -313,7 +318,7 @@ function renderGroups() {
     const rounds = [1, 2, 3].map(rd => {
       const fx = MATCHES.filter(m => m.group === g && m.round === rd).map(m => {
         const done = played(m), hw = done && m.score[0] > m.score[1], aw = done && m.score[1] > m.score[0];
-        const meta = [m.time, m.court && `${S.court} ${m.court}`].filter(Boolean).join(' · ');
+        const meta = [`${S.game} ${m.id}`, m.time, m.court && `${S.court} ${m.court}`].filter(Boolean).join(' · ');
         return `<div class="fx">
           <span class="h ${done ? (hw ? 'w' : 'l') : ''}">${esc(m.home)}</span>
           <span class="s ${done ? 'done' : ''}">${done ? `${m.score[0]} – ${m.score[1]}` : 'vs'}</span>

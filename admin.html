@@ -150,7 +150,7 @@ const store = {
 function games() {
   const ko = knockout();
   const list = MATCHES.map(m => ({
-    id: String(m.id), section: `Γύρος ${m.round}`, tag: `Όμιλος ${m.group} · #${m.id}`,
+    id: String(m.id), section: `Γύρος ${m.round}`, tag: `Όμιλος ${m.group} · #${m.id} · ${m.time || ''}`,
     teams: [m.home, m.away], score: m.score,
   }));
   for (const id of KO_IDS) {
