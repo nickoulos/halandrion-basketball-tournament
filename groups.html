@@ -211,7 +211,7 @@
 
 <footer>
   <span data-t="brandSub"></span>
-  <span data-t="footerNote"></span>
+  <span><span data-t="footerNote"></span> <a href="https://foursightlab.com/" target="_blank" rel="noopener" style="color:var(--text);font-weight:700">FourSight Lab</a></span>
 </footer>
 
 <script src="tournament.js"></script>
@@ -240,7 +240,7 @@ const STR = {
     ],
     thirdsTitle: 'Μάχη των 3ων',
     thirdOf: g => '3ος Ομίλου ' + g,
-    footerNote: 'Φτιαγμένο με αγάπη για τη γειτονιά',
+    footerNote: 'Φτιαγμένο με αγάπη για τη γειτονιά από τη',
     live: t => 'Ζωντανά αποτελέσματα · ενημέρωση ' + t, stale: 'Δεν ήταν δυνατή η ενημέρωση — δοκιμάζω ξανά',
     ids: { QF1: 'ΠΡ1', QF2: 'ΠΡ2', QF3: 'ΠΡ3', QF4: 'ΠΡ4', SF1: 'ΗΜ1', SF2: 'ΗΜ2', F: 'Τελικός' },
   },
@@ -267,7 +267,7 @@ const STR = {
     ],
     thirdsTitle: 'Race of the thirds',
     thirdOf: g => 'Group ' + g + ' 3rd place',
-    footerNote: 'Made with love for the neighbourhood',
+    footerNote: 'Made with love for the neighbourhood by',
     live: t => 'Live scores · updated ' + t, stale: 'Couldn’t refresh — retrying',
     ids: { QF1: 'QF1', QF2: 'QF2', QF3: 'QF3', QF4: 'QF4', SF1: 'SF1', SF2: 'SF2', F: 'Final' },
   },
